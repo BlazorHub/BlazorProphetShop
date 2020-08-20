@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using BlazorShop.Server.Data;
+using Microsoft.EntityFrameworkCore;
+using BlazorShop.Server.Data.Repositories.ProductRepository;
 
 namespace BlazorShop.Server
 {
@@ -22,7 +25,8 @@ namespace BlazorShop.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddDbContext<BlazorShopContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
