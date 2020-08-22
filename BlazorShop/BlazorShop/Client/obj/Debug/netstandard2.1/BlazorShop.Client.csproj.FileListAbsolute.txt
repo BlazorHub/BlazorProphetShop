@@ -1,2 +1,0 @@
-C:\Users\Korisnik\source\repos\BlazorShop\BlazorShop\BlazorShop\Client\obj\Debug\netstandard2.1\integrity\rDxOhAkkG0rzM8mDToRsneyatLZ3m_OyLTXPRA81ZKw=.hash
-C:\Users\Korisnik\source\repos\BlazorShop\BlazorShop\BlazorShop\Client\obj\Debug\netstandard2.1\integrity\ROy00p56saSEbyOGgwnu8op__-jeRfR6GYOOLp_fVw4=.hash

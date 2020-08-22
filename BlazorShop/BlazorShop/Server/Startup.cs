@@ -9,6 +9,10 @@ using System.Linq;
 using BlazorShop.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using BlazorShop.Server.Data.Repositories.ProductRepository;
+using BlazorShop.Server.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BlazorShop.Server
 {
@@ -27,6 +31,20 @@ namespace BlazorShop.Server
         {
             services.AddDbContext<BlazorShopContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Jwt:Key").Value)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true
+                };
+            });
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
