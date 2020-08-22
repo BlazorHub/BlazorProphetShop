@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[3.2.1, )"
             },
+            "Microsoft.AspNetCore.Components.WebAssembly.Authentication": {
+              "target": "Package",
+              "version": "[3.2.1, )"
+            },
             "Microsoft.AspNetCore.Components.WebAssembly.Build": {
               "suppressParent": "All",
               "target": "Package",
@@ -148,6 +152,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[3.1.7, )"
+            },
+            "Toolbelt.AspNetCore.CssLiveReloader": {
+              "target": "Package",
+              "version": "[1.0.1, )"
             }
           },
           "imports": [

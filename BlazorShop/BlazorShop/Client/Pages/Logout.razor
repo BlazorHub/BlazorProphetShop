@@ -1,0 +1,13 @@
+﻿@page "/odjava"
+@inject ILoginService loginService
+@inject NavigationManager navigationManager
+
+<text>Odjavljujem se..</text>
+
+@code {
+    protected async override Task OnInitializedAsync()
+    {
+        await loginService.Logout();
+        navigationManager.NavigateTo("/");
+    }
+}

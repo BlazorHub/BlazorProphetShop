@@ -1,4 +1,5 @@
 ﻿using BlazorShop.Server.Data;
+using BlazorShop.Shared.DTOs;
 using BlazorShop.Shared.Http;
 using BlazorShop.Shared.Models;
 using Microsoft.AspNetCore.Http;
@@ -28,10 +29,11 @@ namespace BlazorShop.Server.Services
         }
 
 
-        public async Task<HttpResponse<string>> Login(string username, string password)
+        public async Task<HttpResponse<UserToken>> Login(string username, string password)
         {
-            HttpResponse<string> response = new HttpResponse<string>();
+            HttpResponse<UserToken> response = new HttpResponse<UserToken>();
             User user = await _context.User.FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
+            
             if (user == null)
             {
                 response.Success = false;
@@ -48,24 +50,42 @@ namespace BlazorShop.Server.Services
             return response;
         }
 
-        public async Task<HttpResponse<int>> Register(User user, string password)
+        public async Task<HttpResponse<int>> Register(UserRegisterDTO userInfo)
         {
             HttpResponse<int> response = new HttpResponse<int>();
-            if (await UserExists(user.Username))
+            
+            User newUser = new User
+            {
+                Username = userInfo.Username,
+                Name = userInfo.Name,
+                Enabled = true,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Email = userInfo.Email,
+                Phone = userInfo.Phone,
+                Document = userInfo.Document,
+                Discriminator = "Client",
+                Address = userInfo.Address
+            };
+
+
+            if (await UserExists(userInfo.Username))
             {
                 response.Success = false;
                 // response.Message = "User already exists!";
                 return response;
             }
 
-            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+            CreatePasswordHash(userInfo.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            user.PasswordSalt = passwordSalt;
-            user.PasswordHash = passwordHash;
+            newUser.PasswordSalt = passwordSalt;
+            newUser.PasswordHash = passwordHash;
 
-            await _context.User.AddAsync(user);
+            await _context.User.AddAsync(newUser);
             await _context.SaveChangesAsync();
-            response.Data = user.Id;
+            
+            response.Data = newUser.Id;
+            
             return response;
         }
 
@@ -103,7 +123,7 @@ namespace BlazorShop.Server.Services
             }
         }
 
-        private string CreateToken(User user)
+        private UserToken CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -111,24 +131,22 @@ namespace BlazorShop.Server.Services
                 new Claim(ClaimTypes.Name, user.Username),
             };
 
-            SymmetricSecurityKey key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value)
-                );
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Key").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var expiration = DateTime.UtcNow.AddYears(1);
 
-            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            JwtSecurityToken token = new JwtSecurityToken(
+                issuer: null,
+                audience: null,
+                claims: claims,
+                expires: expiration,
+                signingCredentials: creds);
 
-            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            return new UserToken()
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = creds
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = expiration
             };
-
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
         }
-
     }
 }

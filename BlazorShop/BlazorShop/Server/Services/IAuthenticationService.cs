@@ -1,4 +1,5 @@
-﻿using BlazorShop.Shared.Http;
+﻿using BlazorShop.Shared.DTOs;
+using BlazorShop.Shared.Http;
 using BlazorShop.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ namespace BlazorShop.Server.Services
 {
     public interface IAuthenticationService
     {
-        Task<HttpResponse<int>> Register(User user, string password);
-        Task<HttpResponse<string>> Login(string username, string password);
+        Task<HttpResponse<int>> Register(UserRegisterDTO userInfo);
+        Task<HttpResponse<UserToken>> Login(string username, string password);
         Task<bool> UserExists(string username);
     }
 }

@@ -1,0 +1,61 @@
+﻿@page "/prijava"
+
+@inject IUserRepository userRepository
+@inject NavigationManager navigationManager
+@inject ILoginService loginService
+
+@using BlazorShop.Client.Auth
+@using BlazorShop.Client.Repositories.User
+
+<h3>Prijava</h3>
+
+@using System.ComponentModel.DataAnnotations
+
+<div class="box-content" style="margin: auto;">
+    <EditForm Model="userLogin" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator />
+
+        <TelerikTextBox PlaceHolder="john.smith"
+                        Label="Korisničko ime"
+                        TabIndex="3"
+                        @bind-Value="@userLogin.Username"
+                        Width="200px"
+                        InputMode="text"
+                        Id="username"
+                        AutoComplete="username"
+                        Name="username">
+        </TelerikTextBox>
+
+        <TelerikTextBox Label="Lozinka"
+                        Password="HidePassword"
+                        Width="180px"
+                        @bind-Value="@userLogin.Password"></TelerikTextBox>
+        <TelerikButton OnClick="@RevealPassword"
+                       Class="pass-btn"
+                       Icon="@IconName.Unlock"
+                       Primary="true"
+                       ButtonType="ButtonType.Button"></TelerikButton>
+
+        <TelerikButton Class="mt-md" Primary="true" ButtonType="@ButtonType.Submit">Prijavi se</TelerikButton>
+    </EditForm>
+</div>
+
+@code {
+    public UserLoginDTO userLogin = new UserLoginDTO();
+    public bool HidePassword { get; set; } = true;
+
+    public async Task RevealPassword()
+    {
+        HidePassword = false;
+        await Task.Delay(700);
+        HidePassword = true;
+    }
+
+    public async Task HandleLogin()
+    {
+        var userToken = await userRepository.Login(userLogin);
+        Console.WriteLine(userToken.Data.Token);
+        await loginService.Login(userToken.Data.Token);
+        navigationManager.NavigateTo("");
+    }
+}

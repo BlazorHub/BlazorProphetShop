@@ -1,0 +1,10 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <span>Pozdrav, @context.User.Identity.Name</span>
+        <a href="odjava" class="nav-link btn btn-link">Odjava</a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="registracija" class="nav-link btn btn-link">Registracija</a>
+        <a href="prijava" class="nav-link btn btn-link">Prijava</a>
+    </NotAuthorized>
+</AuthorizeView>

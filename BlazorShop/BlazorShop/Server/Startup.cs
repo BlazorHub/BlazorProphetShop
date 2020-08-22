@@ -12,6 +12,7 @@ using BlazorShop.Server.Data.Repositories.ProductRepository;
 using BlazorShop.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Toolbelt.Extensions.DependencyInjection;
 using System.Text;
 
 namespace BlazorShop.Server
@@ -56,6 +57,7 @@ namespace BlazorShop.Server
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebAssemblyDebugging();
+                app.UseCssLiveReload();
             }
             else
             {
@@ -69,6 +71,8 @@ namespace BlazorShop.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BlazorShop.Server.Services;
+using BlazorShop.Shared.DTOs;
 using BlazorShop.Shared.Http;
-using KI_Expert_Blazor.Shared.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,11 +21,22 @@ namespace BlazorShop.Server.Controllers
             _authService = authService;
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserLoginDTO user)
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(UserRegisterDTO userInfo)
         {
-            HttpResponse<string> response = await _authService.Login(user.Username, user.Password);
+            HttpResponse<int> response = await _authService.Register(userInfo);
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<UserToken>> Login([FromBody] UserLoginDTO user)
+        {
+            HttpResponse<UserToken> response = await _authService.Login(user.Username, user.Password);
 
             if (!response.Success)
             {

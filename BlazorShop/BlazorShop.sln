@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorShop.Server", "BlazorShop\Server\BlazorShop.Server.csproj", "{DDC37114-72ED-4E0E-A8DE-F4436AECE585}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorShop.Server", "BlazorShop\Server\BlazorShop.Server.csproj", "{DDC37114-72ED-4E0E-A8DE-F4436AECE585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorShop.Client", "BlazorShop\Client\BlazorShop.Client.csproj", "{243FDFB4-9862-4D28-8E5C-AED2AF1F2BF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorShop.Client", "BlazorShop\Client\BlazorShop.Client.csproj", "{243FDFB4-9862-4D28-8E5C-AED2AF1F2BF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorShop.Shared", "BlazorShop\Shared\BlazorShop.Shared.csproj", "{955B02EA-30C3-4EAF-95C5-20ED39034651}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorShop.Shared", "BlazorShop\Shared\BlazorShop.Shared.csproj", "{955B02EA-30C3-4EAF-95C5-20ED39034651}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
