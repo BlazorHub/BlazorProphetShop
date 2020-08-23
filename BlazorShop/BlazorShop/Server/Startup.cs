@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Toolbelt.Extensions.DependencyInjection;
 using System.Text;
 using BlazorShop.Server.Services.Storage;
+using AutoMapper;
 
 namespace BlazorShop.Server
 {
@@ -32,6 +33,7 @@ namespace BlazorShop.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<BlazorShopContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IFileStorageService, AzureStorageService>();

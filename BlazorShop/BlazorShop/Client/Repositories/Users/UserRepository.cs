@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using BlazorShop.Shared.DTOs;
 using BlazorShop.Shared.Http;
 
-namespace BlazorShop.Client.Repositories.User
+namespace BlazorShop.Client.Repositories.Users
 {
     public class UserRepository : IUserRepository
     {

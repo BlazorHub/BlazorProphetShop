@@ -1,0 +1,14 @@
+﻿<article class="product-card">
+    <div class="product-card__imagecontainer">
+        <img class="product-card__image" src="https://blazorshop.blob.core.windows.net/images/@Product.ImageName" alt="@Product.Name" />
+    </div>
+    <div class="product-card__content">
+        <h3 class="product-card__title">@Product.Name</h3>
+        <p class="product-card__price">@Product.Value .00 HRK</p>
+    </div>
+    <TelerikButton Class="mt-md" Primary="true" ButtonType="@ButtonType.Button">Kupi</TelerikButton>
+</article>
+
+@code {
+    [Parameter] public ProductViewModel Product { get; set; }
+}

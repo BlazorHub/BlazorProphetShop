@@ -1,0 +1,40 @@
+﻿@page "/proizvodi"
+@inject IProductRepository productRepository
+
+<div class="row">
+    @if (Products != null)
+    {
+        @foreach (var p in Products)
+        {
+            <div class="col-3">
+                <ProductCard Product="p" />
+            </div>
+        }
+    }
+    else
+    {
+        <p>Loading products...</p>
+    }
+</div>
+
+
+@code {
+    public List<ProductViewModel> Products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await FetchMovies();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task FetchMovies()
+    {
+        Products = await productRepository.GetProducts();
+    }
+}

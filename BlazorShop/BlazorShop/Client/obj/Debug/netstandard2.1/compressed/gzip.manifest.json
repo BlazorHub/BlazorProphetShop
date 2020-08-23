@@ -1,7 +1,7 @@
 {
   "FilesToCompress": [
     {
-      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\-k0uiP2vmqPqEI0_C9UQpY1BZDid2M1AAPTReToOfiA=.hash",
+      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\vbKhLKykYJtB8C9QyE7FaziUwCdADlZ-VyUfI9pbC6M=.hash",
       "Source": "C:\\Users\\Korisnik\\source\\repos\\BlazorShop\\BlazorShop\\BlazorShop\\Client\\obj\\Debug\\netstandard2.1\\blazor\\unlinked\\BlazorShop.Client.dll",
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\_framework\/_bin\/BlazorShop.Client.dll.gz"
     },
@@ -216,7 +216,7 @@
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\_framework\/_bin\/Microsoft.JSInterop.dll.gz"
     },
     {
-      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\SiGuqj30WgN_SBDBn4ZWl_wuAOsUtwpkfUb71qKwsKw=.hash",
+      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\643HWpTonNomJXQH4H7m1dekb2MoM54R8ntbKG8WvzQ=.hash",
       "Source": "C:\\Users\\Korisnik\\source\\repos\\BlazorShop\\BlazorShop\\BlazorShop\\Client\\obj\\Debug\\netstandard2.1\\blazor\\unlinked\\BlazorShop.Shared.dll",
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\_framework\/_bin\/BlazorShop.Shared.dll.gz"
     },
@@ -321,12 +321,12 @@
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\_framework\/_bin\/System.Runtime.Loader.dll.gz"
     },
     {
-      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\yuvoohF_8xPxW2iBGaJurbFDUidTzieKBEzuSLFV-Ik=.hash",
+      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\OsXRUis6WUIL30ozTvZ8J2JLOsWXGr1_sCOMVVb_EY8=.hash",
       "Source": "C:\\Users\\Korisnik\\source\\repos\\BlazorShop\\BlazorShop\\BlazorShop\\Client\\obj\\Debug\\netstandard2.1\\blazor\\unlinked\\BlazorShop.Client.pdb",
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\_framework\/_bin\/BlazorShop.Client.pdb.gz"
     },
     {
-      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\ji5-qgVaWG0uFMls8gf2ePXyGoEcsFQK2FefqQnv1gc=.hash",
+      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\MafL0sIjZXIhSMLMO41PKIbHCqn8CaETCDXAapAbnAc=.hash",
       "Source": "C:\\Users\\Korisnik\\source\\repos\\BlazorShop\\BlazorShop\\BlazorShop\\Client\\obj\\Debug\\netstandard2.1\\blazor\\unlinked\\BlazorShop.Shared.pdb",
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\_framework\/_bin\/BlazorShop.Shared.pdb.gz"
     },
@@ -351,12 +351,12 @@
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\_framework\/blazor.webassembly.js.gz"
     },
     {
-      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\9fwMDgmrh1H7NIrJAP5vXW3im2t91dsNu2rrImOBlfY=.hash",
+      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\hCWVrXiRm0lriek4JBgJzagoUPSbis5ixIWolBQbV9M=.hash",
       "Source": "C:\\Users\\Korisnik\\source\\repos\\BlazorShop\\BlazorShop\\BlazorShop\\Client\\obj\\Debug\\netstandard2.1\\blazor\\blazor.boot.json",
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\_framework\/blazor.boot.json.gz"
     },
     {
-      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\nCfHTQMxw3RyyZaPXAXWT5QY3Et4vJCXnpw_V98a9vw=.hash",
+      "InputSource": "obj\\Debug\\netstandard2.1\\integrity\\-p1F47YYdGvuEnVGfud6KuD9RNjbKvMlcriZH7vM530=.hash",
       "Source": "C:\\Users\\Korisnik\\source\\repos\\BlazorShop\\BlazorShop\\BlazorShop\\Client\\obj\\Debug\\netstandard2.1\\blazor\\service-worker-assets.js",
       "Target": "obj\\Debug\\netstandard2.1\\compressed\\service-worker-assets.js.gz"
     }

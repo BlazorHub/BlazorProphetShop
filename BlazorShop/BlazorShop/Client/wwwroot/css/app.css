@@ -1,8 +1,13 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('components/product-card.css');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     min-height: 100vh;
+}
+
+body {
+    background: #eee;
 }
 
 a, .btn-link {

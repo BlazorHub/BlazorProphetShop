@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BlazorShop.Server.Data;
 using BlazorShop.Server.Data.Repositories.ProductRepository;
 using BlazorShop.Server.Services.Storage;
+using BlazorShop.Shared.DTOs;
 using BlazorShop.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +19,14 @@ namespace BlazorShop.Server.Controllers
     {
         private readonly IProductRepository _repository;
         private readonly IFileStorageService _azureStorage;
+        private readonly IMapper _mapper;
         private readonly BlazorShopContext _context;
 
-        public ProductController(IProductRepository repository, IFileStorageService azureStorage, BlazorShopContext context)
+        public ProductController(IProductRepository repository, IFileStorageService azureStorage, IMapper mapper, BlazorShopContext context)
         {
             _context = context;
             _azureStorage = azureStorage;
+            _mapper = mapper;
             _repository = repository;
         }
 
@@ -36,7 +40,7 @@ namespace BlazorShop.Server.Controllers
                 await _azureStorage.SaveFile(p.ImageContent, p.ImageName, "images");
             }
 
-            return Ok(products);
+            return Ok(_mapper.Map<List<ProductViewModel>>(products));
         }
     }
 }

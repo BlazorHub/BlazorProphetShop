@@ -10,7 +10,8 @@ using Microsoft.Extensions.Logging;
 using BlazorShop.Client.Helpers;
 using BlazorShop.Client.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
-using BlazorShop.Client.Repositories.User;
+using BlazorShop.Client.Repositories.Users;
+using BlazorShop.Client.Repositories.Products;
 
 namespace BlazorShop.Client
 {
@@ -29,6 +30,7 @@ namespace BlazorShop.Client
 
             // Repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
             // Authentication
             builder.Services.AddScoped<JwtAuthenticationStateProvider>();
