@@ -18,10 +18,11 @@ namespace BlazorShop.Shared.Models
         public bool Promotion { get; set; }
         public int PromotionPercentage { get; set; }
         public int Quantity { get; set; }
-        public byte[] Image { get; set; }
         public bool Enabled { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public byte[] ImageContent { get; set; }
+        public string ImageName { get; set; }
 
         public virtual Category Category { get; set; }
         public virtual ICollection<OrderProduct> OrderProduct { get; set; }

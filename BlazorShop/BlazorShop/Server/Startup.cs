@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Toolbelt.Extensions.DependencyInjection;
 using System.Text;
+using BlazorShop.Server.Services.Storage;
 
 namespace BlazorShop.Server
 {
@@ -33,6 +34,7 @@ namespace BlazorShop.Server
             services.AddDbContext<BlazorShopContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IFileStorageService, AzureStorageService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
