@@ -61,13 +61,13 @@
               "target": "Package",
               "version": "[3.2.1, )"
             },
+            "Radzen.Blazor": {
+              "target": "Package",
+              "version": "[2.11.13, )"
+            },
             "System.Net.Http.Json": {
               "target": "Package",
               "version": "[3.2.1, )"
-            },
-            "Telerik.UI.for.Blazor.Trial": {
-              "target": "Package",
-              "version": "[2.16.0, )"
             }
           },
           "imports": [

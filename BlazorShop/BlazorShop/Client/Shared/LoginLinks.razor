@@ -1,10 +1,12 @@
-﻿<AuthorizeView>
-    <Authorized>
-        <span>Pozdrav, @context.User.Identity.Name</span>
-        <a href="odjava" class="nav-link btn btn-link">Odjava</a>
-    </Authorized>
-    <NotAuthorized>
-        <a href="registracija" class="nav-link btn btn-link">Registracija</a>
-        <a href="prijava" class="nav-link btn btn-link">Prijava</a>
-    </NotAuthorized>
-</AuthorizeView>
+﻿<div class="d-flex justify-content-end w-100">
+    <AuthorizeView Roles="Manager, Customer">
+        <Authorized>
+            <span class="d-inline-block mr-2">Pozdrav, @context.User.Identity.Name</span>
+            <a href="odjava" class="link">Odjava</a>
+        </Authorized>
+        <NotAuthorized>
+            <a href="registracija" class="link mr-2">Registracija</a>
+            <a href="prijava" class="link">Prijava</a>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>

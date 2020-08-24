@@ -12,6 +12,7 @@ using BlazorShop.Client.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
 using BlazorShop.Client.Repositories.Users;
 using BlazorShop.Client.Repositories.Products;
+using Radzen;
 
 namespace BlazorShop.Client
 {
@@ -23,7 +24,10 @@ namespace BlazorShop.Client
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddTelerikBlazor();
+
+            // Radzen
+            builder.Services.AddScoped<DialogService>();
+            builder.Services.AddScoped<NotificationService>();
 
             // HTTP Service
             builder.Services.AddScoped<IHttpService, HttpService>();
@@ -40,6 +44,7 @@ namespace BlazorShop.Client
                 provider => provider.GetRequiredService<JwtAuthenticationStateProvider>());
 
             // Authorization
+            builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();
 
             await builder.Build().RunAsync();

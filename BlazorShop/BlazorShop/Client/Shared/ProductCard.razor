@@ -4,11 +4,18 @@
     </div>
     <div class="product-card__content">
         <h3 class="product-card__title">@Product.Name</h3>
-        <p class="product-card__price">@Product.Value .00 HRK</p>
+        <p class="product-card__price">@FormatPrice(Product.Value)</p>
     </div>
-    <TelerikButton Class="mt-md" Primary="true" ButtonType="@ButtonType.Button">Kupi</TelerikButton>
+    <RadzenButton Text="Dodaj u košaricu" 
+                  Icon="add_shopping_cart" 
+                  Style="width: 100%" />
 </article>
 
 @code {
     [Parameter] public ProductViewModel Product { get; set; }
+
+    private string FormatPrice(double price)
+    {
+        return $"{price}.00 HRK";
+    }
 }

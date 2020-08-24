@@ -1,0 +1,28 @@
+﻿.navigation {
+    height: 100vh;
+    background-color: #3a474d;
+}
+
+.navigation__list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.navigation__item {
+    font-size: 1.2rem;
+    border-bottom: solid 1px #363d40;
+}
+
+.navigation__link {
+    display: inline-block;
+    width: 100%;
+    color: #fff;
+    padding: .5rem 0 .5rem 2rem;
+}
+
+.navigation__link:hover, .navigation__link.active {
+    background-color: #28363c;
+    color: #fff !important;
+    text-decoration: none !important;
+}

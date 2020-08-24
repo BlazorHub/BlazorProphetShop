@@ -46,7 +46,7 @@ namespace BlazorShop.Client.Auth
 
         }
 
-        private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+        public IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
             var claims = new List<Claim>();
             var payload = jwt.Split('.')[1];
@@ -75,6 +75,7 @@ namespace BlazorShop.Client.Auth
             }
 
             claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
+
             return claims;
         }
 
