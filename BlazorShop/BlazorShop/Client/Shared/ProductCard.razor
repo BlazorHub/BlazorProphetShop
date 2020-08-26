@@ -1,4 +1,6 @@
-﻿<article class="product-card">
+﻿@inject NavigationManager navigationManager
+
+<article class="product-card">
     <div class="product-card__imagecontainer">
         <img class="product-card__image" src="https://blazorshop.blob.core.windows.net/images/@Product.ImageName" alt="@Product.Name" />
     </div>
@@ -6,13 +8,34 @@
         <h3 class="product-card__title">@Product.Name</h3>
         <p class="product-card__price">@FormatPrice(Product.Value)</p>
     </div>
-    <RadzenButton Text="Dodaj u košaricu" 
-                  Icon="add_shopping_cart" 
-                  Style="width: 100%" />
+    <AuthorizeView Roles="Manager">
+        <Authorized>
+            <RadzenButton Text="Dodaj u košaricu"
+                          ButtonStyle="ButtonStyle.Success"
+                          Icon="add_shopping_cart"
+                          Style="width: 100%"
+                          Click="@(() => AddProductToCart.InvokeAsync(Product))" />
+        </Authorized>
+        <NotAuthorized>
+            <RadzenButton Text="Izmijeni"
+                          ButtonStyle="ButtonStyle.Warning"
+                          Icon="create"
+                          Style="width: 100%"
+                          Click="@(() => navigationManager.NavigateTo($"proizvodi/uredi/{Product.Id}"))" />
+            <RadzenButton Text="Ukloni"
+                          ButtonStyle="ButtonStyle.Danger"
+                          Icon="delete"
+                          Style="width: 100%; margin-top: 10px"
+                          Click="@(() => DeleteProduct.InvokeAsync(Product.Id))" />
+        </NotAuthorized>
+    </AuthorizeView>
+    
 </article>
 
 @code {
     [Parameter] public ProductViewModel Product { get; set; }
+    [Parameter] public EventCallback<ProductViewModel> AddProductToCart { get; set; }
+    [Parameter] public EventCallback<int> DeleteProduct { get; set; }
 
     private string FormatPrice(double price)
     {

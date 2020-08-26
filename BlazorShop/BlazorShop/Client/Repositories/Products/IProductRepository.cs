@@ -9,6 +9,9 @@ namespace BlazorShop.Client.Repositories.Products
 {
     public interface IProductRepository
     {
-        Task<List<ProductViewModel>> GetProducts();
+        Task<List<ProductViewModel>> GetAll();
+        Task<int> Add(AddProductDTO newProduct);
+        Task Update(AddProductDTO newProduct);
+        Task Delete(int productId);
     }
 }

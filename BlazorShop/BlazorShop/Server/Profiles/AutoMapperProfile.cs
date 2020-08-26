@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BlazorShop.Server.Profiles
 {
-    public class UserProfile : Profile
+    public class AutoMapperProfile : Profile
     {
-        public UserProfile()
+        public AutoMapperProfile()
         {
             CreateMap<Product, ProductViewModel>();
         }

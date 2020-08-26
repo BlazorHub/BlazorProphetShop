@@ -62,6 +62,22 @@ namespace BlazorShop.Client.Helpers
             }
         }
 
+        public async Task<HttpResponse<object>> Put<T>(string url, T data)
+        {
+            var dataJson = JsonSerializer.Serialize(data);
+            var stringContent = new StringContent(dataJson, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(url, stringContent);
+            
+            return new HttpResponse<object>(null, response.IsSuccessStatusCode, response);
+        }
+
+        public async Task<HttpResponse<object>> Delete(string url)
+        {
+            var responseHTTP = await _httpClient.DeleteAsync(url);
+
+            return new HttpResponse<object>(null, responseHTTP.IsSuccessStatusCode, responseHTTP);
+        }
+
         private async Task<T> Deserialize<T>(HttpResponseMessage httpResponse, JsonSerializerOptions options)
         {
             var responseString = await httpResponse.Content.ReadAsStringAsync();

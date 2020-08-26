@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using BlazorShop.Client.Repositories.Users;
 using BlazorShop.Client.Repositories.Products;
 using Radzen;
+using BlazorShop.Client.Store;
+using Tewr.Blazor.FileReader;
 
 namespace BlazorShop.Client
 {
@@ -24,10 +26,14 @@ namespace BlazorShop.Client
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 
             // Radzen
             builder.Services.AddScoped<DialogService>();
             builder.Services.AddScoped<NotificationService>();
+
+            // Store
+            builder.Services.AddScoped<OrderStateProvider>();
 
             // HTTP Service
             builder.Services.AddScoped<IHttpService, HttpService>();
@@ -35,6 +41,9 @@ namespace BlazorShop.Client
             // Repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+            // Helpers
+            builder.Services.AddScoped<IDisplayToast, DisplayToast>();
 
             // Authentication
             builder.Services.AddScoped<JwtAuthenticationStateProvider>();

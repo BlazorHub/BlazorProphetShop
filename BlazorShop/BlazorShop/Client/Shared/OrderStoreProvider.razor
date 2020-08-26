@@ -1,0 +1,43 @@
+﻿@inject OrderStateProvider orderStateProvider
+@implements IDisposable
+
+@if (state == null)
+{
+    <p>loading...</p>
+}
+else
+{
+    <CascadingValue Value="@state" IsFixed="false">@ChildContent</CascadingValue>
+}
+
+@code{
+    private OrderState state = null;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        orderStateProvider.Changed += OrderStateChanged;
+        await Refresh();
+    }
+
+    public void Dispose()
+    {
+        orderStateProvider.Changed -= OrderStateChanged;
+    }
+
+    private async void OrderStateChanged(object sender, EventArgs e)
+    {
+        await InvokeAsync(async () =>
+        {
+            await Refresh();
+            StateHasChanged();
+        });
+    }
+
+    private async Task Refresh()
+    {
+        state = await orderStateProvider.Get();
+    }
+}

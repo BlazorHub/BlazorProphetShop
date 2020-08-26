@@ -1,5 +1,6 @@
 ﻿.navigation {
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     background-color: #3a474d;
 }
 

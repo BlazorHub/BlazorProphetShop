@@ -16,6 +16,7 @@ using Toolbelt.Extensions.DependencyInjection;
 using System.Text;
 using BlazorShop.Server.Services.Storage;
 using AutoMapper;
+using BlazorShop.Server.Data.Repositories.CategoryRepository;
 
 namespace BlazorShop.Server
 {
@@ -34,6 +35,8 @@ namespace BlazorShop.Server
         {
             services.AddDbContext<BlazorShopContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IFileStorageService, AzureStorageService>();

@@ -19,7 +19,29 @@ namespace BlazorShop.Client.Repositories.Products
             this._httpService = httpService;
         }
 
-        public async Task<List<ProductViewModel>> GetProducts()
+        public async Task<int> Add(AddProductDTO newProduct)
+        {
+            var response = await _httpService.Post<AddProductDTO, int>(baseURL, newProduct);
+
+            if (!response.Success)
+            {
+                throw new ApplicationException(await response.GetBody());
+            }
+
+            return response.Data;
+        }
+
+        public async Task Delete(int productId)
+        {
+            var response = await _httpService.Delete($"{baseURL}/{productId}");
+
+            if (!response.Success)
+            {
+                throw new ApplicationException(await response.GetBody());
+            }
+        }
+
+        public async Task<List<ProductViewModel>> GetAll()
         {
             var response = await _httpService.Get<List<ProductViewModel>>(baseURL);
 
@@ -29,6 +51,11 @@ namespace BlazorShop.Client.Repositories.Products
             }
 
             return response.Data;
+        }
+
+        public Task Update(AddProductDTO newProduct)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,5 +11,7 @@ namespace BlazorShop.Client.Helpers
         Task<HttpResponse<T>> Get<T>(string url);
         Task<HttpResponse<object>> Post<T>(string url, T data);
         Task<HttpResponse<TResponse>> Post<T, TResponse>(string url, T data);
+        Task<HttpResponse<object>> Delete(string url);
+        Task<HttpResponse<object>> Put<T>(string url, T data);
     }
 }

@@ -16,44 +16,29 @@
             <label class="mb-0" for="username">Korisničko ime</label>
             <RadzenTextBox Placeholder="Search..." 
                            @bind-Value="@userLogin.Username" 
-                           Change="@(args => Change(args, "TextBox with placeholder"))" 
                            Style="margin-bottom: 20px" />
         </div>
         <div class="d-flex flex-column">
             <label class="mb-0" for="password">Lozinka</label>
             <RadzenPassword Style="margin-bottom: 20px" 
-                            @bind-Value="@userLogin.Password"
-                            Change="@(args => Change(args, "Password"))" />
+                            @bind-Value="@userLogin.Password" />
 
         </div>
-        <RadzenButton Click="@((args) => Click(args, "Button with text and icon"))" 
-                      Text="Prijavi se" 
+        <RadzenButton Text="Prijavi se" 
                       ButtonType="Radzen.ButtonType.Submit" 
                       Icon="login" 
-                      Style="margin-bottom: 20px; width: 150px" />
+                      Style="margin-bottom: 20px; width: 200px" />
     </EditForm>
 </div>
 
 @code {
     public UserLoginDTO userLogin = new UserLoginDTO();
-    public Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
-
-    void Change(object value, string name)
-    {
-        events.Add(DateTime.Now, $"{name} value changed to {value}");
-    }
 
     public async Task HandleLogin()
     {
         var userToken = await userRepository.Login(userLogin);
-        Console.WriteLine(userToken.Data.Token);
+
         await loginService.Login(userToken.Data.Token);
         navigationManager.NavigateTo("/");
-    }
-
-    void Click(MouseEventArgs args, string buttonName)
-    {
-        events.Add(DateTime.Now, $"{buttonName} clicked");
-        StateHasChanged();
     }
 }

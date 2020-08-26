@@ -1,25 +1,38 @@
 ﻿@page "/"
 @page "/proizvodi"
 @inject IProductRepository productRepository
+@inject IDisplayToast displayToast
+@inject NavigationManager navigationManager
 
-<div class="row">
+@using System.Text.Json
+
+<AuthorizeView Roles="Manager">
+    <Authorized>
+        <div class="d-flex w-100 justify-content-end">
+            <RadzenButton Click="@((args) => navigationManager.NavigateTo("proizvodi/novi"))" Text="Novi proizvod" Icon="note_add" Style="width: 200px" />
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+<div class="row mt-2">
     @if (Products != null)
     {
         @foreach (var p in Products)
         {
-            <div class="col-3">
-                <ProductCard Product="p" />
+            <div class="col-3 mb-2">
+                <ProductCard Product="p" AddProductToCart="AddToCart" DeleteProduct="DeleteProduct" />
             </div>
         }
     }
     else
     {
-        <p>Loading products...</p>
+        <p>Učitavam proizvode...</p>
     }
 </div>
 
 
 @code {
+    [CascadingParameter] OrderState Order { get; set; }
     public List<ProductViewModel> Products { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -36,6 +49,23 @@
 
     private async Task FetchMovies()
     {
-        Products = await productRepository.GetProducts();
+        Products = await productRepository.GetAll();
+    }
+
+    private void AddToCart(ProductViewModel vm)
+    {
+        Order.CustomerId = 1;
+        Order.OrderProduct.Add(new OrderProductSubmitDTO
+        {
+            ProductId = vm.Id,
+            Quantity = 1,
+            Value = vm.Value
+        });
+    }
+
+    private async Task DeleteProduct(int productId)
+    {
+        await productRepository.Delete(productId);
+        await displayToast.Show("Proizvod je uspješno izbrisan!", "success");
     }
 }

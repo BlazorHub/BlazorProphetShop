@@ -1,0 +1,99 @@
+﻿@page "/proizvodi/novi"
+@inject IProductRepository productRepository
+@inject IDisplayToast displayToast
+@inject NavigationManager navigationManager
+
+<h3>Novi proizvod</h3>
+
+<RadzenTemplateForm Data="@NewProduct" Submit="@(async (AddProductDTO args) => await CreateProduct(args) )">
+    <div class="row">
+        <div class="col-6">
+            <RadzenFieldset Text="Informacije">
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Kategorija" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox style="width: 100%;" Name="categoryName" @bind-Value="@NewProduct.CategoryName" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Naziv" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox style="width: 100%;" Name="name" @bind-Value="@NewProduct.Name" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Opis proizvoda" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox style="width: 100%;" Name="description" @bind-Value="@NewProduct.Description" />
+                    </div>
+                </div>
+            </RadzenFieldset>
+
+            <RadzenFieldset Text="Vrijednost">
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Zaliha" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenNumeric TValue="int" @bind-Value="@NewProduct.Quantity" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Cijena" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenNumeric TValue="double" @bind-Value="@NewProduct.Value" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Promotivni popust (%)" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenNumeric TValue="int" Min="1" Max="100" @bind-Value="@NewProduct.PromotionPercentage" />
+                    </div>
+                </div>
+            </RadzenFieldset>
+        </div>
+        <div class="col-6 d-flex flex-column align-items-end">
+            <RadzenFieldset Text="Pregled" Style="width: 100%">
+                <ImageUpload OnSelectedImage="PictureSelected" ImageURL="@imageUrl" />
+            </RadzenFieldset>
+            <RadzenButton Text="Spremi" ButtonType="ButtonType.Submit" Style="margin-top: 15px; width: 150px" />
+        </div>
+    </div>
+</RadzenTemplateForm>
+
+@code {
+    public AddProductDTO NewProduct { get; set; } = new AddProductDTO();
+    private string imageUrl;
+
+    public async Task CreateProduct(AddProductDTO args)
+    {
+        var id = await productRepository.Add(NewProduct);
+
+        if (id != 0)
+        {
+            await displayToast.Show("Proizvod je uspješno kreiran!", "success");
+            await Task.Delay(1000);
+
+            navigationManager.NavigateTo("proizvodi");
+        }
+        else
+        {
+            await displayToast.Show("Greška pri kreiranju proizvoda!", "error");
+        }
+    }
+
+    private void PictureSelected(string imageBase64)
+    {
+        NewProduct.ImageContent = Convert.FromBase64String(imageBase64);
+    }
+}
