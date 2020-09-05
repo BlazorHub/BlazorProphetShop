@@ -1,12 +1,23 @@
 ﻿@inject NavigationManager navigationManager
+@using BlazorShop.Client.Business
 
 <article class="product-card">
     <div class="product-card__imagecontainer">
         <img class="product-card__image" src="https://blazorshop.blob.core.windows.net/images/@Product.ImageName" alt="@Product.Name" />
+        @if (Product.Promotion)
+        {
+            <span class="product-card__discount">@String.Concat("-",Product.PromotionPercentage,"%")</span>
+        }
     </div>
     <div class="product-card__content">
         <h3 class="product-card__title">@Product.Name</h3>
-        <p class="product-card__price">@FormatPrice(Product.Value)</p>
+        <p class="product-card__price">
+            @if (Product.Promotion)
+            {
+                <span class="product-card__price-old">@FormatPrice(Product.Value)</span>
+            }
+            <span class="product-card__price-new">@FormatPrice(Products.CalculatePromotionValue(Product))</span>
+        </p>
     </div>
     <AuthorizeView Roles="Manager">
         <Authorized>

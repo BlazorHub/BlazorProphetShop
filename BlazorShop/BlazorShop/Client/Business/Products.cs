@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlazorShop.Shared.DTOs;
 using BlazorShop.Shared.Models;
 
 namespace BlazorShop.Client.Business 
 {
     class Products 
     {
-        public static double CalculatePromotionValue(Product product) 
+        public static double CalculatePromotionValue(ProductViewModel product) 
         {
             double adjustment = Math.Pow(10, 1);
             double value = product.Value - (product.Value * product.PromotionPercentage / 100);

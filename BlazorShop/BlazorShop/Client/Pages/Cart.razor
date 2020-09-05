@@ -1,47 +1,93 @@
 ﻿@page "/kosarica"
 @inject IDisplayToast displayToast
+@inject NavigationManager navigationManager
+@using System.Security.Claims
 
 <div class="row">
     <div class="col-8">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Slika</th>
-                    <th>Naziv</th>
-                    <th>Količina</th>
-                    <th>Vrijednost</th>
-                    <th>#</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Order.OrderProduct)
-                {
-                    <tr>
-                        <td>
-                            <img style="max-height: 6rem" src="https://blazorshop.blob.core.windows.net/images/@item.ImageName" alt="@item.Name" />
-                        </td>
-                        <td>@item.Name</td>
-                        <td>@item.Quantity</td>
-                        <td>@item.Value</td>
-                        <td>
-                            <RadzenButton Click="@(async () => await RemoveItemFromCart(item))"
-                                          Text="Ukloni"
-                                          Icon="remove_shopping_cart"
-                                          Style="width: 140px" />
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <RadzenGrid Data="Order.OrderProduct"
+                    AllowSorting="true"
+                    TItem="OrderProductSubmitDTO"
+                    EmptyText="Vaša košarica je prazna.">
+            <Columns>
+                <RadzenGridColumn TItem="OrderProductSubmitDTO" Property="Name" Title="Naziv proizvoda" />
+                <RadzenGridColumn TItem="OrderProductSubmitDTO" Property="ImageName" Title="Slika" Sortable="false" Filterable="false">
+                    <Template Context="data">
+                        <RadzenImage Path="@GetImagePath(data.ImageName)" Style="max-height: 6rem" />
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="OrderProductSubmitDTO" Property="Quantity" Title="Količina">
+                    <Template Context="data">
+                        <RadzenNumeric TValue="int"
+                                       @bind-Value="data.Quantity"
+                                       Min="1" 
+                                       Max="100" 
+                                       Change="@(() => RefreshCart())" />
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="OrderProductSubmitDTO" Property="Value" Title="Vrijednost" >
+                    <Template Context="data">
+                        @FormatValue(data.Value)
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="OrderProductSubmitDTO" Title="#" Sortable="false" Filterable="false" Width="160px">
+                    <Template Context="data">
+                        <RadzenButton Click="@(async () => await RemoveItemFromCart(data))"
+                                      Text="Ukloni"
+                                      Icon="remove_shopping_cart"
+                                      Style="width: 140px" />
+                    </Template>
+                </RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
     </div>
     <div class="col-4">
-
+        <RadzenCard>
+            <div class="row">
+                <div class="col-12">
+                    <RadzenIcon Icon="shopping_cart" /><b style="font-size:30px">Detalji košarice</b>
+                    <div class="row mt-1">
+                        <div class="col-6 text-left"><b>Vrijednost košarice:</b></div>
+                        <div class="col-6 text-right">@FormatValue(Order.ProductsValue)</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-6 text-left"><b>Dostava:</b></div>
+                        <div class="col-6 text-right">@FormatValue(Order.ShippingValue)</div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-6 text-left"><b>Popust:</b></div>
+                        <div class="col-6 text-right">@FormatValue(Order.DiscountValue)</div>
+                    </div>
+                    <hr />
+                    <div class="row mt-2">
+                        <div class="col-6 text-left"><b>Sveukupno:</b></div>
+                        <div class="col-6 text-right">@FormatValue(Order.GrandTotal)</div>
+                    </div>
+                    <div class="row my-4">
+                        <div class="col-5 text-left"><span>Način plačanja: </span></div>
+                        <div class="col-7 text-right">
+                            <RadzenDropDown TValue="string"
+                                            Placeholder="Odaberite način plaćanja..."
+                                            Data="@Payment.Values"
+                                            @bind-Value="@Order.Payment"
+                                            Change="@(args => Change(args))" />
+                        </div>
+                    </div>
+                    <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                  Icon="done"
+                                  Text="Završi kupnju"
+                                  Style="width: 100%; margin-top: 1rem"
+                                  Click="SubmitOrder"/>
+                </div>
+            </div>
+        </RadzenCard>
     </div>
 </div>
 
 
 @code {
     [CascadingParameter] OrderState Order { get; set; }
+    [CascadingParameter] Task<AuthenticationState> AuthState { get; set; }
 
     public async Task RemoveItemFromCart(OrderProductSubmitDTO orderProduct)
     {
@@ -49,5 +95,59 @@
         Order.Refresh();
 
         await displayToast.Show($"Proizvod {orderProduct.Name.ToUpper()} ({orderProduct.Quantity}) je uklonjen iz košarice.", "success");
+    }
+
+    private string GetImagePath(string imageName)
+    {
+        return $"https://blazorshop.blob.core.windows.net/images/{imageName}";
+    }
+
+    private string FormatValue(double value)
+    {
+        return $"{value}.00 HRK";
+    }
+
+    private void RefreshCart()
+    {
+        Order.Refresh();
+    }
+
+    private void Change(object args)
+    {
+        if (Order.Payment == Payment.INCASH)
+        {
+            Order.DiscountPercentage = 15;
+        }
+
+        if (Order.Payment == Payment.INSTALLMENT1X)
+        {
+            Order.DiscountPercentage = 0;
+        }
+
+        if (Order.Payment == Payment.INSTALLMENT2X)
+        {
+            Order.DiscountPercentage = 0;
+        }
+
+        if (Order.Payment == Payment.INSTALLMENT3X)
+        {
+            Order.DiscountPercentage = 0;
+        }
+    }
+
+    private async void SubmitOrder()
+    {
+        var authState = await AuthState;
+        var userId = authState.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        if (userId == null)
+        {
+            await displayToast.Show("Morate se prijaviti kako bi završili kupnju!", "warning");
+            navigationManager.NavigateTo("/prijava");
+        }
+        else
+        {
+            Console.WriteLine(userId);
+        }
     }
 }

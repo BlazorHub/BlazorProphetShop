@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BlazorShop.Client.Business;
 
 namespace BlazorShop.Client.Store
 {
@@ -30,7 +31,6 @@ namespace BlazorShop.Client.Store
                 customerId = value;
                 RaisePropertyChanged();
             }
-        
         }
 
         public string Payment
@@ -41,7 +41,6 @@ namespace BlazorShop.Client.Store
                 payment = value;
                 RaisePropertyChanged();
             }
-
         }
 
         public int DiscountPercentage
@@ -52,7 +51,6 @@ namespace BlazorShop.Client.Store
                 discountPercentage = value;
                 RaisePropertyChanged();
             }
-
         }
 
         public ObservableCollection<OrderProductSubmitDTO> OrderProduct 
@@ -75,6 +73,38 @@ namespace BlazorShop.Client.Store
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public double ShippingValue
+        {
+            get
+            {
+                return Orders.CalculateShippingValue(this);
+            }
+        }
+
+        public double DiscountValue
+        {
+            get 
+            { 
+                return Orders.CalculateDiscountValue(this); 
+            }
+        }
+
+        public double ProductsValue
+        {
+            get
+            {
+                return Orders.CalculateProductsValue(this);
+            }
+        }
+
+        public double GrandTotal
+        {
+            get
+            {
+                return ShippingValue + ProductsValue - DiscountValue;
+            }
         }
     }
 }
