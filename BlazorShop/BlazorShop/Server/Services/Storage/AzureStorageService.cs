@@ -49,14 +49,5 @@ namespace BlazorShop.Server.Services.Storage
 
             return blob.Uri.ToString();
         }
-
-        public async Task<bool> FileExists(string fileName, string containerName)
-        {
-            var account = CloudStorageAccount.Parse(_connectionString);
-            var client = account.CreateCloudBlobClient();
-            var container = client.GetContainerReference(containerName);
-
-            return await container.GetBlockBlobReference(fileName).ExistsAsync();
-        }
     }
 }

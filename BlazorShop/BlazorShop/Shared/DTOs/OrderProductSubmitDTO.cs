@@ -6,8 +6,10 @@ namespace BlazorShop.Shared.DTOs
 {
     public class OrderProductSubmitDTO
     {
+        public string Name { get; set; }
         public int Quantity { get; set; }
         public double Value { get; set; }
         public int ProductId { get; set; }
+        public string ImageName { get; set; }
     }
 }

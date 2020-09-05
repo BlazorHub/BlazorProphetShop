@@ -2,10 +2,14 @@
 @inject IProductRepository productRepository
 @inject IDisplayToast displayToast
 @inject NavigationManager navigationManager
+@using System.Text.Json
 
 <h3>Novi proizvod</h3>
 
-<RadzenTemplateForm Data="@NewProduct" Submit="@(async (AddProductDTO args) => await CreateProduct(args) )">
+<RadzenTemplateForm TItem="AddProductDTO"
+                    Data="@NewProduct" 
+                    Submit="@(async (AddProductDTO args) => await CreateProduct(args))"
+                    InvalidSubmit="@OnInvalidSubmit">
     <div class="row">
         <div class="col-6">
             <RadzenFieldset Text="Informacije">
@@ -14,7 +18,11 @@
                         <RadzenLabel Text="Kategorija" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenTextBox style="width: 100%;" Name="categoryName" @bind-Value="@NewProduct.CategoryName" />
+                        <RadzenTextBox Style="width: 100%"
+                                       Name="Category" 
+                                       @bind-Value="@NewProduct.CategoryName" />
+                        <RadzenRequiredValidator Component="Category" 
+                                                 Text="Unesite kategoriju proizvoda!" />
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -22,7 +30,11 @@
                         <RadzenLabel Text="Naziv" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenTextBox style="width: 100%;" Name="name" @bind-Value="@NewProduct.Name" />
+                        <RadzenTextBox Style="width: 100%" 
+                                       Name="Name" 
+                                       @bind-Value="@NewProduct.Name" />
+                        <RadzenRequiredValidator Component="Name" 
+                                                 Text="Unesite naziv proizvoda!" />
                     </div>
                 </div>
                 <div class="row">
@@ -41,7 +53,8 @@
                         <RadzenLabel Text="Zaliha" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenNumeric TValue="int" @bind-Value="@NewProduct.Quantity" />
+                        <RadzenNumeric TValue="int" Name="Quantity" @bind-Value="@NewProduct.Quantity" />
+                        <RadzenNumericRangeValidator Component="Quantity" Min="1" Text="Zaliha mora biti veća od 0!" />
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -49,7 +62,8 @@
                         <RadzenLabel Text="Cijena" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenNumeric TValue="double" @bind-Value="@NewProduct.Value" />
+                        <RadzenNumeric TValue="double" Name="Value" @bind-Value="@NewProduct.Value" />
+                        <RadzenNumericRangeValidator Component="Value" Min="1" Text="Vrijednost mora biti veća od 0!" />
                     </div>
                 </div>
                 <div class="row">
@@ -57,7 +71,8 @@
                         <RadzenLabel Text="Promotivni popust (%)" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenNumeric TValue="int" Min="1" Max="100" @bind-Value="@NewProduct.PromotionPercentage" />
+                        <RadzenNumeric TValue="int" Name="PromotionPercentage" @bind-Value="@NewProduct.PromotionPercentage" />
+                        <RadzenNumericRangeValidator Component="PromotionPercentage" Min="0" Max="100" Text="Popust mora biti između 0 i 100%!" />
                     </div>
                 </div>
             </RadzenFieldset>
@@ -95,5 +110,10 @@
     private void PictureSelected(string imageBase64)
     {
         NewProduct.ImageContent = Convert.FromBase64String(imageBase64);
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true }));
     }
 }

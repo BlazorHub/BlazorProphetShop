@@ -30,17 +30,13 @@ namespace BlazorShop.Client.Store
             if (_order != null)
                 return _order;
 
-            // Register the Storage event handler. This handler calls OnStorageUpdated when the storage changed.
-            // This way, you can reload the settings when another instance of the application (tab / window) save the settings
             if (!_initialized)
             {
-                // Create a reference to the current object, so the JS function can call the public method "OnStorageUpdated"
                 var reference = DotNetObjectReference.Create(this);
                 await _jsRuntime.InvokeVoidAsync("BlazorRegisterStorageEvent", reference);
                 _initialized = true;
             }
 
-            // Read the JSON string that contains the data from the local storage
             OrderState result;
 
             var str = await _jsRuntime.InvokeAsync<string>("BlazorGetLocalStorage", KeyName);
@@ -53,7 +49,6 @@ namespace BlazorShop.Client.Store
                 result = new OrderState();
             }
 
-            // Register the OnPropertyChanged event, so it automatically persists the settings as soon as a value is changed
             result.PropertyChanged += OnPropertyChanged;
             _order = result;
             return result;
@@ -61,11 +56,10 @@ namespace BlazorShop.Client.Store
 
         public async Task Save()
         {
-            var json = System.Text.Json.JsonSerializer.Serialize(_order);
+            var json = JsonSerializer.Serialize(_order);
             await _jsRuntime.InvokeVoidAsync("BlazorSetLocalStorage", KeyName, json);
         }
 
-        // Automatically persist the settings when a property changed
         private async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (AutoSave)
@@ -74,13 +68,11 @@ namespace BlazorShop.Client.Store
             }
         }
 
-        // This method is called from BlazorRegisterStorageEvent when the storage changed
         [JSInvokable]
         public void OnStorageUpdated(string key)
         {
             if (key == KeyName)
             {
-                // Reset the settings. The next call to Get will reload the data
                 _order = null;
                 Changed?.Invoke(this, EventArgs.Empty);
             }

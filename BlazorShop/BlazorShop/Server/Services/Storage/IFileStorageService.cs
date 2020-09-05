@@ -10,6 +10,5 @@ namespace BlazorShop.Server.Services.Storage
         Task<string> EditFile(byte[] content, string extension, string containerName, string fileRoute);
         Task DeleteFile(string fileRoute, string containerName);
         Task<string> SaveFile(byte[] content, string fileName, string containerName);
-        Task<bool> FileExists(string fileName, string containerName);
     }
 }

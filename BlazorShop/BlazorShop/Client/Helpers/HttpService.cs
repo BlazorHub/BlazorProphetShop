@@ -81,7 +81,6 @@ namespace BlazorShop.Client.Helpers
         private async Task<T> Deserialize<T>(HttpResponseMessage httpResponse, JsonSerializerOptions options)
         {
             var responseString = await httpResponse.Content.ReadAsStringAsync();
-            Console.WriteLine(responseString);
             return JsonSerializer.Deserialize<T>(responseString, options);
         }
     }

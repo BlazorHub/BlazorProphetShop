@@ -52,20 +52,34 @@
         Products = await productRepository.GetAll();
     }
 
-    private void AddToCart(ProductViewModel vm)
+    private async Task AddToCart(ProductViewModel vm)
     {
-        Order.CustomerId = 1;
-        Order.OrderProduct.Add(new OrderProductSubmitDTO
+        var existingOrderProduct = Order.OrderProduct.FirstOrDefault(op => op.ProductId == vm.Id);
+
+        if (existingOrderProduct == null)
         {
-            ProductId = vm.Id,
-            Quantity = 1,
-            Value = vm.Value
-        });
+            Order.OrderProduct.Add(new OrderProductSubmitDTO
+            {
+                Name = vm.Name,
+                ProductId = vm.Id,
+                Quantity = 1,
+                Value = vm.Value,
+                ImageName = vm.ImageName
+            });
+        }
+        else
+        {
+            existingOrderProduct.Quantity += 1;
+        }
+
+        Order.Refresh();
+
+        await displayToast.Show($"Proizvod {vm.Name.ToUpper()} je dodan u košaricu!", "success");
     }
 
-    private async Task DeleteProduct(int productId)
+    private async Task DeleteProduct(ProductViewModel vm)
     {
-        await productRepository.Delete(productId);
-        await displayToast.Show("Proizvod je uspješno izbrisan!", "success");
+        await productRepository.Delete(vm.Id);
+        await displayToast.Show($"Proizvod {vm.Name.ToUpper()} je uspješno izbrisan!", "success");
     }
 }

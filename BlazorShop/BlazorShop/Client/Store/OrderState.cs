@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace BlazorShop.Client.Store
@@ -62,6 +63,11 @@ namespace BlazorShop.Client.Store
                 orderProduct = value;
                 RaisePropertyChanged();
             }
+        }
+
+        public void Refresh()
+        {
+            RaisePropertyChanged();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -10,13 +10,6 @@
     </div>
     <AuthorizeView Roles="Manager">
         <Authorized>
-            <RadzenButton Text="Dodaj u košaricu"
-                          ButtonStyle="ButtonStyle.Success"
-                          Icon="add_shopping_cart"
-                          Style="width: 100%"
-                          Click="@(() => AddProductToCart.InvokeAsync(Product))" />
-        </Authorized>
-        <NotAuthorized>
             <RadzenButton Text="Izmijeni"
                           ButtonStyle="ButtonStyle.Warning"
                           Icon="create"
@@ -26,7 +19,14 @@
                           ButtonStyle="ButtonStyle.Danger"
                           Icon="delete"
                           Style="width: 100%; margin-top: 10px"
-                          Click="@(() => DeleteProduct.InvokeAsync(Product.Id))" />
+                          Click="@(() => DeleteProduct.InvokeAsync(Product))" />
+        </Authorized>
+        <NotAuthorized>
+            <RadzenButton Text="Dodaj u košaricu"
+                          ButtonStyle="ButtonStyle.Success"
+                          Icon="add_shopping_cart"
+                          Style="width: 100%"
+                          Click="@(() => AddProductToCart.InvokeAsync(Product))" />
         </NotAuthorized>
     </AuthorizeView>
     
@@ -35,7 +35,7 @@
 @code {
     [Parameter] public ProductViewModel Product { get; set; }
     [Parameter] public EventCallback<ProductViewModel> AddProductToCart { get; set; }
-    [Parameter] public EventCallback<int> DeleteProduct { get; set; }
+    [Parameter] public EventCallback<ProductViewModel> DeleteProduct { get; set; }
 
     private string FormatPrice(double price)
     {

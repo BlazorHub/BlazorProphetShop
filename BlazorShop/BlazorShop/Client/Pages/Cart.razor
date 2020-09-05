@@ -1,0 +1,53 @@
+﻿@page "/kosarica"
+@inject IDisplayToast displayToast
+
+<div class="row">
+    <div class="col-8">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Slika</th>
+                    <th>Naziv</th>
+                    <th>Količina</th>
+                    <th>Vrijednost</th>
+                    <th>#</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Order.OrderProduct)
+                {
+                    <tr>
+                        <td>
+                            <img style="max-height: 6rem" src="https://blazorshop.blob.core.windows.net/images/@item.ImageName" alt="@item.Name" />
+                        </td>
+                        <td>@item.Name</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Value</td>
+                        <td>
+                            <RadzenButton Click="@(async () => await RemoveItemFromCart(item))"
+                                          Text="Ukloni"
+                                          Icon="remove_shopping_cart"
+                                          Style="width: 140px" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-4">
+
+    </div>
+</div>
+
+
+@code {
+    [CascadingParameter] OrderState Order { get; set; }
+
+    public async Task RemoveItemFromCart(OrderProductSubmitDTO orderProduct)
+    {
+        Order.OrderProduct.Remove(orderProduct);
+        Order.Refresh();
+
+        await displayToast.Show($"Proizvod {orderProduct.Name.ToUpper()} ({orderProduct.Quantity}) je uklonjen iz košarice.", "success");
+    }
+}

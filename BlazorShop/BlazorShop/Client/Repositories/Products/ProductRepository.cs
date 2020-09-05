@@ -53,6 +53,18 @@ namespace BlazorShop.Client.Repositories.Products
             return response.Data;
         }
 
+        public async Task<List<ProductViewModel>> GetAllByCategory(int id)
+        {
+            var response = await _httpService.Get<List<ProductViewModel>>($"{baseURL}/bycategory/{id}");
+
+            if (!response.Success)
+            {
+                throw new ApplicationException(await response.GetBody());
+            }
+
+            return response.Data;
+        }
+
         public Task Update(AddProductDTO newProduct)
         {
             throw new NotImplementedException();

@@ -51,6 +51,13 @@ namespace BlazorShop.Server.Controllers
             return Ok(_mapper.Map<List<ProductViewModel>>(products));
         }
 
+
+        [HttpGet("bycategory/{id}")]
+        public async Task<IActionResult> GetAllByCategory([FromRoute] int id)
+        {
+            return Ok(await _repository.GetProductsByCategory(id));
+        }
+
         [HttpPost]
         public async Task<ActionResult<int>> Add(AddProductDTO newProduct)
         {
@@ -72,7 +79,8 @@ namespace BlazorShop.Server.Controllers
 
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
-            return product.Id;
+            
+            return Ok(product.Id);
         }
 
         [HttpDelete("{id}")]

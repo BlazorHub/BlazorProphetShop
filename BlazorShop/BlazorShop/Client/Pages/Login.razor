@@ -1,12 +1,9 @@
 ﻿@page "/prijava"
-
 @inject IUserRepository userRepository
 @inject NavigationManager navigationManager
 @inject ILoginService loginService
 
 <h3>Prijava</h3>
-
-@using System.ComponentModel.DataAnnotations
 
 <div class="box-content" style="width: 300px;">
     <EditForm Model="userLogin" OnValidSubmit="HandleLogin">
@@ -14,7 +11,7 @@
 
         <div class="d-flex flex-column">
             <label class="mb-0" for="username">Korisničko ime</label>
-            <RadzenTextBox Placeholder="Search..." 
+            <RadzenTextBox Placeholder="johndoe" 
                            @bind-Value="@userLogin.Username" 
                            Style="margin-bottom: 20px" />
         </div>
@@ -22,7 +19,6 @@
             <label class="mb-0" for="password">Lozinka</label>
             <RadzenPassword Style="margin-bottom: 20px" 
                             @bind-Value="@userLogin.Password" />
-
         </div>
         <RadzenButton Text="Prijavi se" 
                       ButtonType="Radzen.ButtonType.Submit" 
