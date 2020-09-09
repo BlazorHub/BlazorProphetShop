@@ -1,5 +1,7 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using System.Text.Json
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -9,9 +11,10 @@
 @using BlazorShop.Client.Auth
 @using BlazorShop.Client.Helpers
 @using BlazorShop.Client.Shared
-@using BlazorShop.Client.Store 
-@using BlazorShop.Client.Repositories.Products
-@using BlazorShop.Client.Repositories.Users
+@using BlazorShop.Client.Store
+@using BlazorShop.Client.Data.Products
+@using BlazorShop.Client.Data.Users
+@using BlazorShop.Client.Data.Orders
 @using BlazorShop.Shared.DTOs
 @using BlazorShop.Shared.Models
 @using Radzen

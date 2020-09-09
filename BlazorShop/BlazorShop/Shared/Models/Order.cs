@@ -17,7 +17,6 @@ namespace BlazorShop.Shared.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int DiscountPercentage { get; set; }
-
         public virtual User Customer { get; set; }
         public virtual ICollection<OrderProduct> OrderProduct { get; set; }
     }

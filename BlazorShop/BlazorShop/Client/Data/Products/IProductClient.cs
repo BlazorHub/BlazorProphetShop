@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorShop.Client.Repositories.Products
+namespace BlazorShop.Client.Data.Products
 {
-    public interface IProductRepository
+    public interface IProductClient
     {
         Task<List<ProductViewModel>> GetAll();
         Task<List<ProductViewModel>> GetAllByCategory(int id);
-        Task<int> Add(AddProductDTO newProduct);
+        Task<int> Create(AddProductDTO newProduct);
         Task Update(AddProductDTO newProduct);
         Task Delete(int productId);
     }

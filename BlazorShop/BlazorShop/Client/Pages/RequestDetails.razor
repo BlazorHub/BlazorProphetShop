@@ -1,0 +1,148 @@
+﻿@page "/zahtjevi/{RequestId:int}"
+@inject IOrderClient orderClient
+@inject IDisplayToast displayToast
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Manager")]
+
+@if (Request == null)
+{
+    <span>Ucitavanje..</span>
+}
+else
+{
+    <h2 class="mb-3">Narudzba @DisplayData.FormatID(Request.Id)</h2>
+
+    <div class="row">
+        <div class="col-7">
+            <h3 class="mb-2">Stavke</h3>
+            <RadzenGrid Data="Request.OrderProduct"
+                        AllowSorting="true"
+                        TItem="OrderProductViewModel"
+                        EmptyText="Vaša košarica je prazna.">
+                <Columns>
+                    <RadzenGridColumn TItem="OrderProductViewModel" Property="ImageName" Title="Slika" Sortable="false" Filterable="false">
+                        <Template Context="data">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <RadzenImage Path="@data.ImageName" Style="max-height: 6rem" />
+                            </div>
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn TItem="OrderProductViewModel" Property="ProductName" Title="Naziv proizvoda" />
+                    <RadzenGridColumn TItem="OrderProductViewModel" Property="Quantity" Title="Količina" />
+                    <RadzenGridColumn TItem="OrderProductViewModel" Property="Value" Title="Vrijednost">
+                        <Template Context="data">
+                            @DisplayData.FormatValue(data.Value)
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+        </div>
+        <div class="col-5">
+            <h3 class="mb-2">Detalji</h3>
+            <RadzenTemplateForm TItem="ManagerOrderViewModel" Data="@Request" Submit="@HandleRequest">
+                <RadzenCard>
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="row mt-1">
+                                <div class="d-flex flex-column">
+                                    <span><b>Kupac:</b></span>
+                                    <span>@Request.CustomerName</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="d-flex flex-column">
+                                    <span><b>Plaćanje:</b></span>
+                                    <span>@Request.Payment</span>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="d-flex flex-column">
+                                    <span><b>Datum kreiranja:</b></span>
+                                    <span>@Request.CreatedAt</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="row mt-2">
+                                <div class="col-6 text-left"></div>
+                                <div class="col-6 text-right">Iznos</div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6 text-left"><b class="text-uppercase">Proizvodi</b></div>
+                                <div class="col-6 text-right">@DisplayData.FormatValue(Request.ProductsValue)</div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6 text-left"><b class="text-uppercase">Dostava</b></div>
+                                <div class="col-6 text-right">@DisplayData.FormatValue(Request.ShippingValue)</div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6 text-left"><b class="text-uppercase">Popust</b></div>
+                                <div class="col-6 text-right">@DisplayData.FormatValue(Request.DiscountValue)</div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6 text-left"><b class="text-uppercase">Ukupno</b></div>
+                                <div class="col-6 text-right">@DisplayData.FormatValue(Request.Total)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-5 text-left"><span>Status: </span></div>
+                        <div class="col-7 text-right">
+                            <RadzenDropDown TValue="string"
+                                            Name="Payment"
+                                            Placeholder="Odaberite način plaćanja..."
+                                            Data="@OrderStatus.Values"
+                                            @bind-Value="@Request.Status" />
+                            <RadzenRequiredValidator Component="Payment"
+                                                     Text="Odaberite status narudžbe!" />
+                        </div>
+                    </div>
+                    <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                                  ButtonType="ButtonType.Submit"
+                                  Icon="done"
+                                  Text="Spremi"
+                                  Style="width: 100%; margin-top: 1rem" />
+                </RadzenCard>
+            </RadzenTemplateForm>
+        </div>
+    </div>
+}
+
+
+@code {
+    [Parameter] public int RequestId { get; set; }
+    public ManagerOrderViewModel Request { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            await FetchRequest();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task FetchRequest()
+    {
+        Request = await orderClient.GetSingleRequest(RequestId);
+    }
+
+    private async Task HandleRequest()
+    {
+        UpdateOrderStatusDTO updateOrder = new UpdateOrderStatusDTO
+        {
+            Id = Request.Id,
+            Status = Request.Status
+        };
+
+        await orderClient.UpdateOrderStatus(updateOrder);
+        await displayToast.Show($"Naruždba {DisplayData.FormatID(updateOrder.Id)} je ažurirana!", "success");
+        await Task.Delay(1500);
+
+        navigationManager.NavigateTo("/zahtjevi");
+    }
+}

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using BlazorShop.Shared.DTOs;
 using BlazorShop.Shared.Http;
 
-namespace BlazorShop.Client.Repositories.Users
+namespace BlazorShop.Client.Data.Users
 {
-    public class UserRepository : IUserRepository
+    public class UserClient : IUserClient
     {
         private readonly IHttpService _httpService;
         private readonly string baseURL = "api/auth";
 
-        public UserRepository(IHttpService httpService)
+        public UserClient(IHttpService httpService)
         {
             _httpService = httpService;
         }

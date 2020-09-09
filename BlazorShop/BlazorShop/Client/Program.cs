@@ -1,20 +1,17 @@
 using System;
 using System.Net.Http;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using BlazorShop.Client.Helpers;
 using BlazorShop.Client.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
-using BlazorShop.Client.Repositories.Users;
-using BlazorShop.Client.Repositories.Products;
+using BlazorShop.Client.Data.Users;
+using BlazorShop.Client.Data.Products;
 using Radzen;
 using BlazorShop.Client.Store;
 using Tewr.Blazor.FileReader;
+using BlazorShop.Client.Data.Orders;
 
 namespace BlazorShop.Client
 {
@@ -39,11 +36,16 @@ namespace BlazorShop.Client
             builder.Services.AddScoped<IHttpService, HttpService>();
 
             // Repositories
-            builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IUserClient, UserClient>();
+            builder.Services.AddScoped<IProductClient, ProductClient>();
+            builder.Services.AddScoped<IOrderClient, OrderClient>();
 
             // Helpers
             builder.Services.AddScoped<IDisplayToast, DisplayToast>();
+
+            // Authorization
+            builder.Services.AddOptions();
+            builder.Services.AddAuthorizationCore();
 
             // Authentication
             builder.Services.AddScoped<JwtAuthenticationStateProvider>();
@@ -51,10 +53,6 @@ namespace BlazorShop.Client
                 provider => provider.GetRequiredService<JwtAuthenticationStateProvider>());
             builder.Services.AddScoped<ILoginService, JwtAuthenticationStateProvider>(
                 provider => provider.GetRequiredService<JwtAuthenticationStateProvider>());
-
-            // Authorization
-            builder.Services.AddOptions();
-            builder.Services.AddAuthorizationCore();
 
             await builder.Build().RunAsync();
         }

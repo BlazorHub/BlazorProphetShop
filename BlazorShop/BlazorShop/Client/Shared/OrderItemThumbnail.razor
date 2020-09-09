@@ -1,0 +1,9 @@
+﻿<div class="order-item">
+    <img class="order-item__img" src="@ImageURL" alt="Order Item" />
+    <span class="order-item__quantity">@DisplayData.FormatQuantity(Quantity)</span>
+</div>
+
+@code {
+    [Parameter] public string ImageURL { get; set; }
+    [Parameter] public int Quantity { get; set; }
+}

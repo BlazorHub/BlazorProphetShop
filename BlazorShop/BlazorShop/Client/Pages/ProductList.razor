@@ -1,6 +1,6 @@
 ﻿@page "/"
 @page "/proizvodi"
-@inject IProductRepository productRepository
+@inject IProductClient productClient
 @inject IDisplayToast displayToast
 @inject NavigationManager navigationManager
 
@@ -49,7 +49,7 @@
 
     private async Task FetchMovies()
     {
-        Products = await productRepository.GetAll();
+        Products = await productClient.GetAll();
     }
 
     private async Task AddToCart(ProductViewModel vm)
@@ -79,7 +79,7 @@
 
     private async Task DeleteProduct(ProductViewModel vm)
     {
-        await productRepository.Delete(vm.Id);
+        await productClient.Delete(vm.Id);
         await displayToast.Show($"Proizvod {vm.Name.ToUpper()} je uspješno izbrisan!", "success");
     }
 }

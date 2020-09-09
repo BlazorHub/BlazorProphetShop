@@ -1,0 +1,59 @@
+﻿@page "/zahtjevi"
+@inject IOrderClient orderClient
+@attribute [Authorize(Roles = "Manager")]
+
+<h2 class="mb-2">Narudžbe kupaca</h2>
+
+@if (CustomerOrders == null)
+{
+    <span>Ucitavanje..</span>
+}
+else
+{
+    <RadzenGrid Data="CustomerOrders"
+                AllowSorting="true"
+                TItem="ManagerOrderItemViewModel"
+                EmptyText="Nema aktivnih zahtjeva.">
+        <Columns>
+            <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="Id" Title="ID narudžbe" />
+            <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="CustomerName" Title="Kupac" Sortable="false" Filterable="false" />
+            <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="Status" Title="Status" Sortable="true" Filterable="true">
+                <Template Context="data">
+                    <span class="@DisplayData.FormatStyleStatus(data.Status)">@data.Status</span>
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="CreatedAt" Title="Datum kreiranja" Sortable="false" Filterable="false" />
+            <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="Total" Title="Ukupno" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    @DisplayData.FormatValue(data.Total)
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="Total" Title="Akcije" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    <a href="zahtjevi/@data.Id" class="link">Pregled</a>
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+}
+
+@code {
+    public List<ManagerOrderItemViewModel> CustomerOrders { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await FetchOrders();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task FetchOrders()
+    {
+        CustomerOrders = await orderClient.GetAllRequests();
+    }
+}

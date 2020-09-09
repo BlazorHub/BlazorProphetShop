@@ -1,13 +1,13 @@
 ﻿@page "/proizvodi/novi"
-@inject IProductRepository productRepository
+@inject IProductClient productClient
 @inject IDisplayToast displayToast
 @inject NavigationManager navigationManager
-@using System.Text.Json
+@attribute [Authorize(Roles = "Manager")]
 
 <h3>Novi proizvod</h3>
 
 <RadzenTemplateForm TItem="AddProductDTO"
-                    Data="@NewProduct" 
+                    Data="@NewProduct"
                     Submit="@(async (AddProductDTO args) => await CreateProduct(args))"
                     InvalidSubmit="@OnInvalidSubmit">
     <div class="row">
@@ -19,9 +19,9 @@
                     </div>
                     <div class="col-md-8">
                         <RadzenTextBox Style="width: 100%"
-                                       Name="Category" 
+                                       Name="Category"
                                        @bind-Value="@NewProduct.CategoryName" />
-                        <RadzenRequiredValidator Component="Category" 
+                        <RadzenRequiredValidator Component="Category"
                                                  Text="Unesite kategoriju proizvoda!" />
                     </div>
                 </div>
@@ -30,10 +30,10 @@
                         <RadzenLabel Text="Naziv" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenTextBox Style="width: 100%" 
-                                       Name="Name" 
+                        <RadzenTextBox Style="width: 100%"
+                                       Name="Name"
                                        @bind-Value="@NewProduct.Name" />
-                        <RadzenRequiredValidator Component="Name" 
+                        <RadzenRequiredValidator Component="Name"
                                                  Text="Unesite naziv proizvoda!" />
                     </div>
                 </div>
@@ -92,7 +92,7 @@
 
     public async Task CreateProduct(AddProductDTO args)
     {
-        var id = await productRepository.Add(NewProduct);
+        var id = await productClient.Create(NewProduct);
 
         if (id != 0)
         {

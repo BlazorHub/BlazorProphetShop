@@ -1,6 +1,7 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url('components/navigation.css');
 @import url('components/product-card.css');
+@import url('components/order-item.css');
 
 *,
 *::before,

@@ -1,0 +1,61 @@
+﻿@page "/moje-narudzbe"
+@inject IOrderClient orderClient
+@attribute [Authorize(Roles = "Customer")]
+
+<h2 class="mb-2">Moje narudžbe</h2>
+
+<RadzenGrid Data="CustomerOrders"
+            AllowSorting="true"
+            TItem="CustomerOrderViewModel"
+            EmptyText="Vaša košarica je prazna.">
+    <Columns>
+        <RadzenGridColumn TItem="CustomerOrderViewModel" Property="Id" Title="ID narudžbe" />
+        <RadzenGridColumn TItem="CustomerOrderViewModel" Property="OrderProduct" Title="Stavke narudžbe" Sortable="false" Filterable="false">
+            <Template Context="data">
+                <div class="d-flex">
+                    @foreach (var item in data.OrderProduct)
+                    {
+                        <OrderItemThumbnail ImageURL="@item.ImageName" Quantity="@item.Quantity" />
+                    }
+                </div>
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="CustomerOrderViewModel" Property="Payment" Title="Način plačanja" Sortable="false" Filterable="false" />
+        <RadzenGridColumn TItem="CustomerOrderViewModel" Property="Status" Title="Status" Sortable="true" Filterable="true">
+            <Template Context="data">
+                <span class="@DisplayData.FormatStyleStatus(data.Status)">@data.Status</span>
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="CustomerOrderViewModel" Property="CreatedAt" Title="Datum kreiranja" Sortable="false" Filterable="false" />
+        <RadzenGridColumn TItem="CustomerOrderViewModel" Property="Total" Title="Ukupno" Sortable="false" Filterable="false">
+            <Template Context="data">
+                @DisplayData.FormatValue(data.Total)
+            </Template>
+        </RadzenGridColumn>
+    </Columns>
+</RadzenGrid>
+
+@code {
+    [CascadingParameter] Task<AuthenticationState> AuthState { get; set; }
+    public List<CustomerOrderViewModel> CustomerOrders { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await FetchOrders();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task FetchOrders()
+    {
+        var authState = await AuthState;
+        var userId = authState.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        CustomerOrders = await orderClient.GetAllByUser(int.Parse(userId));
+    }
+}

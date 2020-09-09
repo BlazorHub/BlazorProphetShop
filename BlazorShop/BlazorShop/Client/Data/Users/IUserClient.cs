@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorShop.Client.Repositories.Users
+namespace BlazorShop.Client.Data.Users
 {
-    interface IUserRepository
+    interface IUserClient
     {
         Task<HttpResponse<UserToken>> Login(UserLoginDTO userInfo);
         Task<UserToken> Register(UserRegisterDTO userInfo);

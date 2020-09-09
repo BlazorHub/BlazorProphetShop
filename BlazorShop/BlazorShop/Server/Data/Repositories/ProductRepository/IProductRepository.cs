@@ -8,6 +8,6 @@ namespace BlazorShop.Server.Data.Repositories.ProductRepository
 {
     public interface IProductRepository : IRepository<Product>
     {
-        Task<IEnumerable<Product>> GetProductsByCategory(int id);
+        Task<IEnumerable<Product>> GetAllByCategory(int id);
     }
 }

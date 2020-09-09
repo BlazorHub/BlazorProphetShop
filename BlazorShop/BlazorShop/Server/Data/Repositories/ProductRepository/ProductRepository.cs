@@ -14,7 +14,7 @@ namespace BlazorShop.Server.Data.Repositories.ProductRepository
 
         public ProductRepository(BlazorShopContext context) : base(context) { }
 
-        public async Task<IEnumerable<Product>> GetProductsByCategory(int id)
+        public async Task<IEnumerable<Product>> GetAllByCategory(int id)
         {
             return await _entities.Where(p => p.CategoryId == id).ToListAsync();
         }

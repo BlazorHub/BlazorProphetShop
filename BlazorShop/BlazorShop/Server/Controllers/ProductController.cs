@@ -55,27 +55,14 @@ namespace BlazorShop.Server.Controllers
         [HttpGet("bycategory/{id}")]
         public async Task<IActionResult> GetAllByCategory([FromRoute] int id)
         {
-            return Ok(await _repository.GetProductsByCategory(id));
+            return Ok(await _repository.GetAllByCategory(id));
         }
 
         [HttpPost]
         public async Task<ActionResult<int>> Add(AddProductDTO newProduct)
         {
-            Product product = new Product
-            {
-                CategoryId = await _categoryRepository.CreateIfNotExists(newProduct.CategoryName),
-                Name = newProduct.Name,
-                Description = newProduct.Description,
-                Value = newProduct.Value,
-                Promotion = newProduct.Promotion,
-                PromotionPercentage = newProduct.PromotionPercentage,
-                Enabled = true,
-                Quantity = newProduct.Quantity,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                ImageContent = newProduct.ImageContent,
-                ImageName = GenerateFileName(newProduct.Name)
-            };
+            var product = _mapper.Map<Product>(newProduct);
+            product.CategoryId = await _categoryRepository.CreateIfNotExists(newProduct.CategoryName);
 
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
@@ -97,11 +84,6 @@ namespace BlazorShop.Server.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private string GenerateFileName(string name)
-        {
-            return name.ToLower().Replace(' ', '_') + ".png";
         }
     }
 }

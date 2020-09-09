@@ -7,19 +7,19 @@ using BlazorShop.Shared.Models;
 using BlazorShop.Shared.Http;
 using BlazorShop.Shared.DTOs;
 
-namespace BlazorShop.Client.Repositories.Products
+namespace BlazorShop.Client.Data.Products
 {
-    class ProductRepository : IProductRepository
+    class ProductClient : IProductClient
     {
         private readonly IHttpService _httpService;
         private readonly string baseURL = "api/product";
 
-        public ProductRepository(IHttpService httpService)
+        public ProductClient(IHttpService httpService)
         {
             this._httpService = httpService;
         }
 
-        public async Task<int> Add(AddProductDTO newProduct)
+        public async Task<int> Create(AddProductDTO newProduct)
         {
             var response = await _httpService.Post<AddProductDTO, int>(baseURL, newProduct);
 

@@ -1,5 +1,5 @@
 ﻿@page "/prijava"
-@inject IUserRepository userRepository
+@inject IUserClient userClient
 @inject NavigationManager navigationManager
 @inject ILoginService loginService
 
@@ -32,7 +32,7 @@
 
     public async Task HandleLogin()
     {
-        var userToken = await userRepository.Login(userLogin);
+        var userToken = await userClient.Login(userLogin);
 
         await loginService.Login(userToken.Data.Token);
         navigationManager.NavigateTo("/");
