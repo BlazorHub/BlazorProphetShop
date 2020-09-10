@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BlazorShop.Shared.DTOs;
 using BlazorShop.Shared.Models;
+using BlazorShop.Shared.ViewModels;
 
 namespace BlazorShop.Client.Business 
 {

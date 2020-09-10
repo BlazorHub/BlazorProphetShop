@@ -1,11 +1,14 @@
-﻿using AutoMapper;
-using BlazorShop.Shared.DTOs;
-using BlazorShop.Shared.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlazorShop.Shared.DTOs.Order;
+using BlazorShop.Shared.DTOs.Product;
+using BlazorShop.Shared.DTOs.User;
+using BlazorShop.Shared.ViewModels;
+using BlazorShop.Shared.Models;
 using BlazorShop.Server.Business;
+using AutoMapper;
 
 namespace BlazorShop.Server.Profiles
 {
@@ -15,7 +18,7 @@ namespace BlazorShop.Server.Profiles
         {
             CreateMap<Product, ProductViewModel>().ForMember(dst => dst.ImageName,
                                                              opt => opt.MapFrom(src => $"https://blazorshop.blob.core.windows.net/images/{src.ImageName}"));
-            CreateMap<AddProductDTO, Product>().ForMember(dst => dst.ImageName,
+            CreateMap<CreateProductDTO, Product>().ForMember(dst => dst.ImageName,
                                                           opt => opt.MapFrom(src => src.Name.ToLower().Replace(' ', '_') + ".png"))
                                                .ForMember(dst => dst.Enabled,
                                                           opt => opt.MapFrom(src => true))
@@ -45,6 +48,15 @@ namespace BlazorShop.Server.Profiles
                                                                 opt => opt.MapFrom(src => Orders.CalculateGrandTotal(src)))
                                                      .ForMember(dst => dst.CustomerName,
                                                                opt => opt.MapFrom(src => src.Customer.Name));
+            CreateMap<CreateUserAddressDTO, Address>();
+            CreateMap<CreateUserDTO, User>().ForMember(dst => dst.Enabled,
+                                                       opt => opt.MapFrom(src => true))
+                                            .ForMember(dst => dst.Discriminator,
+                                                       opt => opt.MapFrom(src => "Customer"))
+                                            .ForMember(dst => dst.CreatedAt,
+                                                       opt => opt.MapFrom(src => DateTime.Now))
+                                            .ForMember(dst => dst.UpdatedAt,
+                                                       opt => opt.MapFrom(src => DateTime.Now));
         }
     }
 }

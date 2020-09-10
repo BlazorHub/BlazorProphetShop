@@ -6,9 +6,9 @@
 
 <h3>Novi proizvod</h3>
 
-<RadzenTemplateForm TItem="AddProductDTO"
+<RadzenTemplateForm TItem="CreateProductDTO"
                     Data="@NewProduct"
-                    Submit="@(async (AddProductDTO args) => await CreateProduct(args))"
+                    Submit="@(async (CreateProductDTO args) => await CreateProduct(args))"
                     InvalidSubmit="@OnInvalidSubmit">
     <div class="row">
         <div class="col-6">
@@ -87,10 +87,10 @@
 </RadzenTemplateForm>
 
 @code {
-    public AddProductDTO NewProduct { get; set; } = new AddProductDTO();
+    public CreateProductDTO NewProduct { get; set; } = new CreateProductDTO();
     private string imageUrl;
 
-    public async Task CreateProduct(AddProductDTO args)
+    public async Task CreateProduct(CreateProductDTO args)
     {
         var id = await productClient.Create(NewProduct);
 

@@ -1,19 +1,17 @@
-﻿using BlazorShop.Server.Data;
-using BlazorShop.Shared.DTOs;
-using BlazorShop.Shared.Http;
-using BlazorShop.Shared.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BlazorShop.Server.Data;
+using BlazorShop.Shared.DTOs.User;
+using BlazorShop.Shared.Http;
+using BlazorShop.Shared.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 
 namespace BlazorShop.Server.Services
 {
@@ -21,11 +19,13 @@ namespace BlazorShop.Server.Services
     {
         private readonly BlazorShopContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AuthenticationService(BlazorShopContext context, IConfiguration configuration)
+        public AuthenticationService(BlazorShopContext context, IConfiguration configuration, IMapper mapper)
         {
             _context = context;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
 
@@ -50,29 +50,15 @@ namespace BlazorShop.Server.Services
             return response;
         }
 
-        public async Task<HttpResponse<int>> Register(UserRegisterDTO userInfo)
+        public async Task<HttpResponse<int>> Register(CreateUserDTO userInfo)
         {
             HttpResponse<int> response = new HttpResponse<int>();
+            User newUser = _mapper.Map<User>(userInfo);
             
-            User newUser = new User
-            {
-                Username = userInfo.Username,
-                Name = userInfo.Name,
-                Enabled = true,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                Email = userInfo.Email,
-                Phone = userInfo.Phone,
-                Document = userInfo.Document,
-                Discriminator = "Client",
-                Address = userInfo.Address
-            };
-
-
-            if (await UserExists(userInfo.Username))
-            {
+            if (await UserExists(userInfo.Username)){ 
                 response.Success = false;
-                // response.Message = "User already exists!";
+                response.Data = -1;
+
                 return response;
             }
 

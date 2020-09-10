@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorShop.Shared.DTOs
+namespace BlazorShop.Shared.DTOs.User
 {
     public class UserLoginDTO
     {

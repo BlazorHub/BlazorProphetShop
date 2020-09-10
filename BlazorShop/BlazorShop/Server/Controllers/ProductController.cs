@@ -7,8 +7,9 @@ using BlazorShop.Server.Data;
 using BlazorShop.Server.Data.Repositories.CategoryRepository;
 using BlazorShop.Server.Data.Repositories.ProductRepository;
 using BlazorShop.Server.Services.Storage;
-using BlazorShop.Shared.DTOs;
+using BlazorShop.Shared.DTOs.Product;
 using BlazorShop.Shared.Models;
+using BlazorShop.Shared.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -59,7 +60,7 @@ namespace BlazorShop.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Add(AddProductDTO newProduct)
+        public async Task<ActionResult<int>> Add(CreateProductDTO newProduct)
         {
             var product = _mapper.Map<Product>(newProduct);
             product.CategoryId = await _categoryRepository.CreateIfNotExists(newProduct.CategoryName);

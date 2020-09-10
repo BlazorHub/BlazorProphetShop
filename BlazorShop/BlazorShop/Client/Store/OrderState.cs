@@ -1,4 +1,4 @@
-﻿using BlazorShop.Shared.DTOs;
+﻿using BlazorShop.Shared.DTOs.Order;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

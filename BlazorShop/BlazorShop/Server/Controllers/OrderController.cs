@@ -5,8 +5,9 @@ using AutoMapper;
 using BlazorShop.Server.Data;
 using BlazorShop.Server.Data.Repositories.OrderProductRepository;
 using BlazorShop.Server.Data.Repositories.OrderRepository;
-using BlazorShop.Shared.DTOs;
+using BlazorShop.Shared.DTOs.Order;
 using BlazorShop.Shared.Models;
+using BlazorShop.Shared.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorShop.Server.Controllers

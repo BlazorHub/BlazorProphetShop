@@ -5,7 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BlazorShop.Shared.Models;
 using BlazorShop.Shared.Http;
-using BlazorShop.Shared.DTOs;
+using BlazorShop.Shared.DTOs.Product;
+using BlazorShop.Shared.ViewModels;
 
 namespace BlazorShop.Client.Data.Products
 {
@@ -19,9 +20,9 @@ namespace BlazorShop.Client.Data.Products
             this._httpService = httpService;
         }
 
-        public async Task<int> Create(AddProductDTO newProduct)
+        public async Task<int> Create(CreateProductDTO newProduct)
         {
-            var response = await _httpService.Post<AddProductDTO, int>(baseURL, newProduct);
+            var response = await _httpService.Post<CreateProductDTO, int>(baseURL, newProduct);
 
             if (!response.Success)
             {
@@ -65,7 +66,7 @@ namespace BlazorShop.Client.Data.Products
             return response.Data;
         }
 
-        public Task Update(AddProductDTO newProduct)
+        public Task Update(CreateProductDTO newProduct)
         {
             throw new NotImplementedException();
         }

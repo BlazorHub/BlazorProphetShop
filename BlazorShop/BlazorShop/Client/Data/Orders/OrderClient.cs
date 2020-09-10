@@ -1,9 +1,10 @@
-﻿using BlazorShop.Client.Helpers;
-using BlazorShop.Shared.DTOs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlazorShop.Client.Helpers;
+using BlazorShop.Shared.DTOs.Order;
+using BlazorShop.Shared.ViewModels;
 
 namespace BlazorShop.Client.Data.Orders
 {

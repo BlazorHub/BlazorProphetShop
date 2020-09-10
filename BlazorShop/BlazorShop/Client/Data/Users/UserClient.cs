@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BlazorShop.Shared.DTOs;
+using BlazorShop.Shared.DTOs.User;
 using BlazorShop.Shared.Http;
 
 namespace BlazorShop.Client.Data.Users
@@ -18,9 +18,9 @@ namespace BlazorShop.Client.Data.Users
             _httpService = httpService;
         }
 
-        public async Task<UserToken> Register(UserRegisterDTO userInfo)
+        public async Task<HttpResponse<int>> Register(CreateUserDTO userInfo)
         {
-            var httpResponse = await _httpService.Post<UserRegisterDTO, UserToken>($"{baseURL}/register", userInfo);
+            var httpResponse = await _httpService.Post<CreateUserDTO, HttpResponse<int>>($"{baseURL}/register", userInfo);
 
             if (!httpResponse.Success)
             {

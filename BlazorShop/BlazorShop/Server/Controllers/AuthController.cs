@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BlazorShop.Server.Services;
-using BlazorShop.Shared.DTOs;
+using BlazorShop.Shared.DTOs.User;
 using BlazorShop.Shared.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +21,8 @@ namespace BlazorShop.Server.Controllers
             _authService = authService;
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register(UserRegisterDTO userInfo)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(CreateUserDTO userInfo)
         {
             HttpResponse<int> response = await _authService.Register(userInfo);
 

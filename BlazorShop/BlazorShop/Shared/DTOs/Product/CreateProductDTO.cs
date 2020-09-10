@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BlazorShop.Shared.DTOs
+namespace BlazorShop.Shared.DTOs.Product
 {
-    public class AddProductDTO
+    public class CreateProductDTO
     {
         public string CategoryName { get; set; }
         public string Name { get; set; }
