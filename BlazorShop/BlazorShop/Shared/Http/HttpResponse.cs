@@ -13,15 +13,18 @@ namespace BlazorShop.Shared.Http
 
         }
 
-        public HttpResponse(T data, bool success, HttpResponseMessage message)
+        public HttpResponse(T data, bool success, HttpResponseMessage message, string customMessage = "")
         {
             Data = data;
             Success = success;
             Message = message;
+            CustomMessage = customMessage;
         }
         public T Data { get; set; }
 
         public bool Success { get; set; } = true;
+
+        public string CustomMessage { get; set; }
 
         public HttpResponseMessage Message { get; set; } = null;
 

@@ -18,5 +18,10 @@ namespace BlazorShop.Server.Data.Repositories.ProductRepository
         {
             return await _entities.Where(p => p.CategoryId == id).ToListAsync();
         }
+
+        public async Task<IEnumerable<Product>> GetAllWithCategories()
+        {
+            return await _entities.Include(p => p.Category).ToListAsync();
+        }
     }
 }

@@ -7,7 +7,7 @@
 <RadzenGrid Data="CustomerOrders"
             AllowSorting="true"
             TItem="CustomerOrderViewModel"
-            EmptyText="Vaša košarica je prazna.">
+            EmptyText="Nemate aktivnih narudžbi.">
     <Columns>
         <RadzenGridColumn TItem="CustomerOrderViewModel" Property="Id" Title="ID narudžbe" />
         <RadzenGridColumn TItem="CustomerOrderViewModel" Property="OrderProduct" Title="Stavke narudžbe" Sortable="false" Filterable="false">
@@ -23,7 +23,7 @@
         <RadzenGridColumn TItem="CustomerOrderViewModel" Property="Payment" Title="Način plačanja" Sortable="false" Filterable="false" />
         <RadzenGridColumn TItem="CustomerOrderViewModel" Property="Status" Title="Status" Sortable="true" Filterable="true">
             <Template Context="data">
-                <span class="@DisplayData.FormatStyleStatus(data.Status)">@data.Status</span>
+                <span class="@DisplayData.FormatStyleOrderStatus(data.Status)">@data.Status</span>
             </Template>
         </RadzenGridColumn>
         <RadzenGridColumn TItem="CustomerOrderViewModel" Property="CreatedAt" Title="Datum kreiranja" Sortable="false" Filterable="false" />

@@ -1,0 +1,186 @@
+﻿@page "/profil"
+@inject IUserClient userClient
+@inject IDisplayToast displayToast
+@inject NavigationManager navigationManager
+
+<h3>Ažuriranje profila</h3>
+
+<RadzenTemplateForm TItem="UpdateUserDTO"
+                    Data="@UpdatedUser"
+                    Submit="@(async (UpdateUserDTO args) => await UpdateUser(args))"
+                    InvalidSubmit="@OnInvalidSubmit">
+    <div class="row">
+        <div class="col-6">
+            <RadzenFieldset Text="Korisnički podaci">
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Ime i prezime" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox Style="width: 100%"
+                                       Name="Name"
+                                       @bind-Value="@UpdatedUser.Name" />
+                        <RadzenRequiredValidator Component="Name"
+                                                 Text="Unesite ime i prezime!" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Email" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox Style="width: 100%"
+                                       Name="Email"
+                                       @bind-Value="@UpdatedUser.Email" />
+                        <RadzenRequiredValidator Component="Email"
+                                                 Text="Unesite email!" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Telefon: " />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox Style="width: 100%"
+                                       Name="Phone"
+                                       @bind-Value="@UpdatedUser.Phone" />
+                        <RadzenRequiredValidator Component="Phone"
+                                                 Text="Unesite telefon!" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="OIB:" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox Style="width: 100%"
+                                       Name="Document"
+                                       @bind-Value="@UpdatedUser.Document" />
+                        <RadzenRequiredValidator Component="Document"
+                                                 Text="Unesite OIB!" />
+                    </div>
+                </div>
+            </RadzenFieldset>
+            <RadzenFieldset Text="Lozinka">
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Lozinka" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenPassword Name="Password"
+                                        @bind-Value="@UpdatedUser.Password" />
+                        <RadzenRequiredValidator Component="Password"
+                                                 Text="Odaberite lozinku!" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Ponovljena lozinka" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenPassword Name="RepeatPassword"
+                                        @bind-Value="@RepeatPassword" />
+                        <RadzenRequiredValidator Component="RepeatPassword"
+                                                 Text="Ponovite lozinku!" />
+                        <RadzenCompareValidator Visible="@(!string.IsNullOrEmpty(RepeatPassword))"
+                                                Value="@UpdatedUser.Password"
+                                                Component="RepeatPassword"
+                                                Text="Lozinke se moraju podudarati!" />
+                    </div>
+                </div>
+            </RadzenFieldset>
+            <RadzenFieldset Text="Lokacija">
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Adresa stanovanja" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox Style="width: 100%"
+                                       Name="AddressName"
+                                       @bind-Value="@UpdatedUser.Address.Name" />
+                        <RadzenRequiredValidator Component="AddressName"
+                                                 Text="Unesite adresu stanovanja!" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Županija" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenDropDown AllowClear="true"
+                                        TValue="string"
+                                        @bind-Value="@UpdatedUser.Address.State"
+                                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                        Placeholder="Odaberite županiju..."
+                                        Data="StateList" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Grad" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenDropDown AllowClear="true"
+                                        TValue="string"
+                                        @bind-Value="@UpdatedUser.Address.City"
+                                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                        Placeholder="Odaberite grad..."
+                                        Data="CityList" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4 align-items-center d-flex">
+                        <RadzenLabel Text="Poštanski broj" />
+                    </div>
+                    <div class="col-md-8">
+                        <RadzenTextBox Name="AddressZipCode"
+                                       Style="width: 100%"
+                                       @bind-Value="@UpdatedUser.Address.ZipCode" />
+                        <RadzenRequiredValidator Component="AddressZipCode"
+                                                 Text="Unesite poštanski broj!" />
+                    </div>
+                </div>
+            </RadzenFieldset>
+            <RadzenButton ButtonStyle="ButtonStyle.Secondary"
+                          ButtonType="ButtonType.Submit"
+                          Icon="done"
+                          Text="Spremi promjene"
+                          Style="width: 100%; margin-top: 1rem" />
+        </div>
+    </div>
+</RadzenTemplateForm>
+
+
+@code {
+    [CascadingParameter] Task<AuthenticationState> AuthState { get; set; }
+
+    public UpdateUserDTO UpdatedUser { get; set; } = new UpdateUserDTO();
+    public List<string> CityList { get; set; } = Cities.GetValues();
+    public List<string> StateList { get; set; } = States.GetValues();
+    public string RepeatPassword { get; set; } = "";
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+        var userId = authState.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        UpdatedUser = await userClient.GetSingle(int.Parse(userId));
+    }
+
+    public async Task UpdateUser(UpdateUserDTO args)
+    {
+        var authState = await AuthState;
+        var userId = authState.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        await userClient.Update(UpdatedUser, int.Parse(userId));
+        await displayToast.Show("Ažuiranje profila je uspješno!", "success");
+        await Task.Delay(1000);
+
+        navigationManager.NavigateTo("/profil", true);
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true }));
+    }
+}

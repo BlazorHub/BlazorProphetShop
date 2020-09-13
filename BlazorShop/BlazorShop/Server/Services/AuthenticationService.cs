@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
+using System.Net.Http;
 
 namespace BlazorShop.Server.Services
 {
@@ -36,15 +38,23 @@ namespace BlazorShop.Server.Services
             
             if (user == null)
             {
-                response.Success = false;
+                response.Data = null;
+                response.CustomMessage = "Korisnik nije pronađen!";
+            }
+            else if (user.Enabled == false)
+            {
+                response.Data = null;
+                response.CustomMessage = "Korisnički račun je onemogućen!";
             }
             else if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
-                response.Success = false;
+                response.Data = null;
+                response.CustomMessage = "Neispravno korisničko ime / lozinka!";
             }
             else
             {
                 response.Data = CreateToken(user);
+                response.CustomMessage = "Uspješna prijava!";
             }
 
             return response;

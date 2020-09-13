@@ -23,7 +23,7 @@ namespace BlazorShop.Client.Helpers
             return $"#{id}";
         }
 
-        public static string FormatStyleStatus(string status)
+        public static string FormatStyleOrderStatus(string status)
         {
             switch (status)
             {
@@ -38,6 +38,16 @@ namespace BlazorShop.Client.Helpers
                 default:
                     return "text-info";
             }
+        }
+
+        public static string FormatUserStatus(bool status)
+        {
+            return status ? "Da" : "Ne";
+        }
+
+        public static string FormatStyleUserStatus(bool status)
+        {
+            return status ? "text-success" : "text-danger";
         }
     }
 }

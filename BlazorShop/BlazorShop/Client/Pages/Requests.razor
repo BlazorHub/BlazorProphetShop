@@ -19,7 +19,7 @@ else
             <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="CustomerName" Title="Kupac" Sortable="false" Filterable="false" />
             <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="Status" Title="Status" Sortable="true" Filterable="true">
                 <Template Context="data">
-                    <span class="@DisplayData.FormatStyleStatus(data.Status)">@data.Status</span>
+                    <span class="@DisplayData.FormatStyleOrderStatus(data.Status)">@data.Status</span>
                 </Template>
             </RadzenGridColumn>
             <RadzenGridColumn TItem="ManagerOrderItemViewModel" Property="CreatedAt" Title="Datum kreiranja" Sortable="false" Filterable="false" />

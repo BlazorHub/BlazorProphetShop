@@ -1,0 +1,147 @@
+﻿@page "/"
+@page "/proizvodi"
+@inject IProductClient productClient
+@inject ICategoryClient categoryClient 
+@inject IDisplayToast displayToast
+@inject NavigationManager navigationManager
+
+
+<div class="d-flex align-items-center w-100 justify-content-between">
+    <div class="d-flex align-items-center">
+        <RadzenDropDown AllowClear="true"
+                        TValue="string"
+                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                        Placeholder="Sortiraj prema..."
+                        @bind-Value="@ActiveSortType"
+                        Data="SortTypes" />
+        <RadzenTextBox @bind-Value="@ActiveSearchTerm"
+                        Placeholder="Pretraži..."
+                        Style="margin-left: 20px" />
+    </div>
+    <AuthorizeView Roles="Manager">
+        <Authorized>
+            <RadzenButton Click="@((args) => navigationManager.NavigateTo("proizvodi/novi"))"
+                            Text="Novi proizvod"
+                            Icon="note_add"
+                            ButtonStyle="ButtonStyle.Success"
+                            Style="width: 200px" />
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+
+<div class="row mt-4">
+    @if (FilteredProducts != null)
+    {
+        @foreach (var p in FilteredProducts)
+        {
+            <div class="col-3 mb-2">
+                <ProductCard Product="p" AddProductToCart="AddToCart" DeleteProduct="DeleteProduct" />
+            </div>
+        }
+    }
+    else
+    {
+        <p>Učitavam proizvode...</p>
+    }
+</div>
+
+
+@code {
+    [CascadingParameter] OrderState Order { get; set; }
+    public List<ProductViewModel> AllProducts { get; set; }
+    public List<ProductViewModel> FilteredProducts { get; set; }
+    public List<GetCategoryDTO> Categories { get; set; }
+    public List<string> SortTypes = new List<string> { "Preporučeno", "Cijena - od najniže", "Cijena - od najviše" };
+
+    private string _activeSortType = "Preporučeno";
+    private string _activeSearchTerm = "";
+
+    private string ActiveSortType
+    {
+        get
+        {
+            return _activeSortType;
+        }
+        set
+        {
+            _activeSortType = value;
+            ApplyFilter();
+        }
+    }
+
+    private string ActiveSearchTerm
+    {
+        get
+        {
+            return _activeSearchTerm;
+        }
+        set
+        {
+            _activeSearchTerm = value;
+            ApplyFilter();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await FetchData();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task FetchData()
+    {
+        AllProducts = await productClient.GetAll();
+        FilteredProducts = await productClient.GetAll();
+        Categories = await categoryClient.GetAll();
+    }
+
+    private async Task AddToCart(ProductViewModel vm)
+    {
+        var existingOrderProduct = Order.OrderProduct.FirstOrDefault(op => op.ProductId == vm.Id);
+
+        if (existingOrderProduct == null)
+        {
+            Order.OrderProduct.Add(new OrderProductSubmitDTO
+            {
+                Name = vm.Name,
+                ProductId = vm.Id,
+                Quantity = 1,
+                Value = vm.Value,
+                ImageName = vm.ImageName
+            });
+        }
+        else
+        {
+            existingOrderProduct.Quantity += 1;
+        }
+
+        Order.Refresh();
+
+        await displayToast.Show($"Proizvod {vm.Name.ToUpper()} je dodan u košaricu!", "success");
+    }
+
+    private async Task DeleteProduct(ProductViewModel vm)
+    {
+        await productClient.Delete(vm.Id);
+        await displayToast.Show($"Proizvod {vm.Name.ToUpper()} je uspješno izbrisan!", "success");
+    }
+
+    private void ApplyFilter()
+    {
+        ProductComparer comparer = new ProductComparer();
+
+        FilteredProducts = AllProducts.Where(p => p.Name.Contains(ActiveSearchTerm) ||
+                                             p.CategoryName.Contains(ActiveSearchTerm))
+                                      .ToList();
+
+        if (ActiveSortType == ProductComparer.PRICE_ASCENDING) FilteredProducts = FilteredProducts.OrderBy(p => p.Value).ToList();
+        if (ActiveSortType == ProductComparer.PRICE_DESCENDING) FilteredProducts = FilteredProducts.OrderByDescending(p => p.Value).ToList();
+    }
+}

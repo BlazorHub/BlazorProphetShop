@@ -1,22 +1,24 @@
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BlazorShop.Server.Data;
 using Microsoft.EntityFrameworkCore;
-using BlazorShop.Server.Data.Repositories.ProductRepository;
-using BlazorShop.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Toolbelt.Extensions.DependencyInjection;
-using System.Text;
-using BlazorShop.Server.Services.Storage;
-using AutoMapper;
+using BlazorShop.Server.Data;
+using BlazorShop.Server.Data.Repositories.ProductRepository;
 using BlazorShop.Server.Data.Repositories.CategoryRepository;
 using BlazorShop.Server.Data.Repositories.OrderProductRepository;
 using BlazorShop.Server.Data.Repositories.OrderRepository;
+using BlazorShop.Server.Data.Repositories.UserRepository;
+using BlazorShop.Server.Services;
+using BlazorShop.Server.Services.Storage;
+using Toolbelt.Extensions.DependencyInjection;
+using AutoMapper;
 using Newtonsoft.Json;
+
 
 namespace BlazorShop.Server
 {
@@ -42,6 +44,7 @@ namespace BlazorShop.Server
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderProductRepository, OrderProductRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IFileStorageService, AzureStorageService>();
 

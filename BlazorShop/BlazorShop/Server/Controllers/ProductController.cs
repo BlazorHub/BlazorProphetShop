@@ -42,7 +42,7 @@ namespace BlazorShop.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            List<Product> products = _context.Product.ToList();
+            var products = await _repository.GetAllWithCategories();
 
             foreach (var p in products)
             {

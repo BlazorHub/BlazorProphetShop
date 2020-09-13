@@ -3,15 +3,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Components.Authorization;
 using BlazorShop.Client.Helpers;
 using BlazorShop.Client.Auth;
-using Microsoft.AspNetCore.Components.Authorization;
+using BlazorShop.Client.Store;
+using BlazorShop.Client.Data.Orders;
+using BlazorShop.Client.Data.Categories;
 using BlazorShop.Client.Data.Users;
 using BlazorShop.Client.Data.Products;
-using Radzen;
-using BlazorShop.Client.Store;
 using Tewr.Blazor.FileReader;
-using BlazorShop.Client.Data.Orders;
+using Radzen;
 
 namespace BlazorShop.Client
 {
@@ -39,6 +40,7 @@ namespace BlazorShop.Client
             builder.Services.AddScoped<IUserClient, UserClient>();
             builder.Services.AddScoped<IProductClient, ProductClient>();
             builder.Services.AddScoped<IOrderClient, OrderClient>();
+            builder.Services.AddScoped<ICategoryClient, CategoryClient>();
 
             // Helpers
             builder.Services.AddScoped<IDisplayToast, DisplayToast>();

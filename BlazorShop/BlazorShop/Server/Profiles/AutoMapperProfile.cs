@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using BlazorShop.Shared.DTOs.Order;
 using BlazorShop.Shared.DTOs.Product;
 using BlazorShop.Shared.DTOs.User;
+using BlazorShop.Shared.DTOs.Category;
 using BlazorShop.Shared.ViewModels;
 using BlazorShop.Shared.Models;
 using BlazorShop.Server.Business;
 using AutoMapper;
+
 
 namespace BlazorShop.Server.Profiles
 {
@@ -17,7 +19,9 @@ namespace BlazorShop.Server.Profiles
         public AutoMapperProfile()
         {
             CreateMap<Product, ProductViewModel>().ForMember(dst => dst.ImageName,
-                                                             opt => opt.MapFrom(src => $"https://blazorshop.blob.core.windows.net/images/{src.ImageName}"));
+                                                             opt => opt.MapFrom(src => $"https://blazorshop.blob.core.windows.net/images/{src.ImageName}"))
+                                                  .ForMember(dst => dst.CategoryName,
+                                                             opt => opt.MapFrom(src => src.Category.Name));
             CreateMap<CreateProductDTO, Product>().ForMember(dst => dst.ImageName,
                                                           opt => opt.MapFrom(src => src.Name.ToLower().Replace(' ', '_') + ".png"))
                                                .ForMember(dst => dst.Enabled,
@@ -57,6 +61,11 @@ namespace BlazorShop.Server.Profiles
                                                        opt => opt.MapFrom(src => DateTime.Now))
                                             .ForMember(dst => dst.UpdatedAt,
                                                        opt => opt.MapFrom(src => DateTime.Now));
+            CreateMap<Address, CreateUserAddressDTO>();
+            CreateMap<User, UpdateUserDTO>().ForMember(dst => dst.Address,
+                                                       opt => opt.MapFrom(src => src.Address ?? new Address()));
+            CreateMap<Category, GetCategoryDTO>();
+            CreateMap<User, GetUserDTO>();
         }
     }
 }

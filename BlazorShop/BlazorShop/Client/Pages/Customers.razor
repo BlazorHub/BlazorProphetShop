@@ -1,0 +1,83 @@
+﻿@page "/kupci"
+@inject IUserClient userClient
+@inject NavigationManager navigationManager
+@attribute [Authorize(Roles = "Manager")]
+
+<h2 class="mb-2">Kupci</h2>
+
+@if (CustomerList == null)
+{
+    <p>Učitavanje...</p>
+}
+else
+{
+    <RadzenGrid Data="CustomerList"
+                AllowSorting="true"
+                TItem="GetUserDTO"
+                EmptyText="Nema aktivnih korisnika.">
+        <Columns>
+            <RadzenGridColumn TItem="GetUserDTO" Property="Id" Title="ID" />
+            <RadzenGridColumn TItem="GetUserDTO" Property="Username" Title="Korisničko ime" Sortable="false" Filterable="false" />
+            <RadzenGridColumn TItem="GetUserDTO" Property="Name" Title="Ime i prezime" Sortable="true" Filterable="true" />
+            <RadzenGridColumn TItem="GetUserDTO" Property="CreatedAt" Title="Datum kreiranja" Sortable="false" Filterable="false" />
+            <RadzenGridColumn TItem="GetUserDTO" Property="Phone" Title="Telefon" Sortable="false" Filterable="false" />
+            <RadzenGridColumn TItem="GetUserDTO" Property="Enabled" Title="Omogućen" Sortable="true" Filterable="false">
+                <Template Context="data">
+                    <span class="@DisplayData.FormatStyleUserStatus(data.Enabled)">@DisplayData.FormatUserStatus(data.Enabled)</span>
+                </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="GetUserDTO" Property="Enabled" Title="Akcije" Sortable="false" Filterable="false">
+                <Template Context="data">
+                    @if (data.Enabled)
+                    {
+                        <RadzenButton Click="@(() => UpdateUserStatus(data.Id, !data.Enabled))"
+                                      Text="Deaktiviraj"
+                                      ButtonStyle="ButtonStyle.Danger"
+                                      Style="text-align: center" />
+                    }
+                    else
+                    {
+                        <RadzenButton Click="@(() => UpdateUserStatus(data.Id, !data.Enabled))"
+                                      Text="Aktiviraj"
+                                      ButtonStyle="ButtonStyle.Success"
+                                      Style="text-align: center" />
+                    }
+                </Template>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+}
+
+
+@code {
+    public List<GetUserDTO> CustomerList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await FetchCustomers();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task FetchCustomers()
+    {
+        CustomerList = await userClient.GetAllCustomers();
+    }
+
+    private async void UpdateUserStatus(int id, bool enabled)
+    {
+        UpdateUserStatusDTO updatedUserStatus = new UpdateUserStatusDTO
+        {
+            Enabled = enabled
+        };
+
+        await userClient.UpdateUserEnabled(updatedUserStatus, id);
+
+        navigationManager.NavigateTo("/kupci", true);
+    }
+}

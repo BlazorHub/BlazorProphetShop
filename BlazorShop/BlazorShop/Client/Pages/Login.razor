@@ -1,7 +1,9 @@
 ﻿@page "/prijava"
 @inject IUserClient userClient
-@inject NavigationManager navigationManager
+@inject IDisplayToast displayToast
 @inject ILoginService loginService
+@inject NavigationManager navigationManager
+
 
 <h3>Prijava</h3>
 
@@ -11,18 +13,18 @@
 
         <div class="d-flex flex-column">
             <label class="mb-0" for="username">Korisničko ime</label>
-            <RadzenTextBox Placeholder="johndoe" 
-                           @bind-Value="@userLogin.Username" 
+            <RadzenTextBox Placeholder="johndoe"
+                           @bind-Value="@userLogin.Username"
                            Style="margin-bottom: 20px" />
         </div>
         <div class="d-flex flex-column">
             <label class="mb-0" for="password">Lozinka</label>
-            <RadzenPassword Style="margin-bottom: 20px" 
+            <RadzenPassword Style="margin-bottom: 20px"
                             @bind-Value="@userLogin.Password" />
         </div>
-        <RadzenButton Text="Prijavi se" 
-                      ButtonType="Radzen.ButtonType.Submit" 
-                      Icon="login" 
+        <RadzenButton Text="Prijavi se"
+                      ButtonType="Radzen.ButtonType.Submit"
+                      Icon="login"
                       Style="margin-bottom: 20px; width: 200px" />
     </EditForm>
 </div>
@@ -34,7 +36,16 @@
     {
         var userToken = await userClient.Login(userLogin);
 
-        await loginService.Login(userToken.Data.Token);
-        navigationManager.NavigateTo("/");
+        if (userToken.Data == null)
+        {
+            await displayToast.Show(userToken.CustomMessage, "error");
+        }
+        else
+        {
+            await loginService.Login(userToken.Data.Token);
+            await displayToast.Show("Uspješna prijava!", "success");
+
+            navigationManager.NavigateTo("/");
+        }
     }
 }
